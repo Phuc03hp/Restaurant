@@ -1,5 +1,4 @@
 package phuc.devops.tech.shoeshop.Entity;
-
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
