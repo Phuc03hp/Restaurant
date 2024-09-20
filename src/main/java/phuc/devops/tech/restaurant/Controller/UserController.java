@@ -1,11 +1,11 @@
-package phuc.devops.tech.shoeshop.Controller;
+package phuc.devops.tech.restaurant.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import phuc.devops.tech.shoeshop.Entity.User;
-import phuc.devops.tech.shoeshop.Service.UserService;
-import phuc.devops.tech.shoeshop.dto.UserCreateAccount;
-import phuc.devops.tech.shoeshop.dto.UserUpdateAccount;
+import phuc.devops.tech.restaurant.Entity.User;
+import phuc.devops.tech.restaurant.Service.UserService;
+import phuc.devops.tech.restaurant.dto.UserCreateAccount;
+import phuc.devops.tech.restaurant.dto.UserUpdateAccount;
 
 import java.util.List;
 

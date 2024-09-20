@@ -1,12 +1,11 @@
-package phuc.devops.tech.shoeshop.Service;
+package phuc.devops.tech.restaurant.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import phuc.devops.tech.shoeshop.Entity.User;
-import phuc.devops.tech.shoeshop.Repository.UserRepository;
-import phuc.devops.tech.shoeshop.dto.UserCreateAccount;
-import phuc.devops.tech.shoeshop.dto.UserCreateModel;
-import phuc.devops.tech.shoeshop.dto.UserUpdateAccount;
+import phuc.devops.tech.restaurant.Entity.User;
+import phuc.devops.tech.restaurant.Repository.UserRepository;
+import phuc.devops.tech.restaurant.dto.UserCreateAccount;
+import phuc.devops.tech.restaurant.dto.UserUpdateAccount;
 
 import java.util.List;
 
@@ -18,18 +17,21 @@ public class UserService {
 
     public User createUser(UserCreateAccount request){
         User user = new User();
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
         user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setName(request.getName());
+        user.setAddress(request.getAddress());
+        user.setNumberPhone(request.getNumberPhone());
         user.setPassword(request.getPassword());
-
         return userRepository.save(user);
     }
 
     public User updateUser(String userID, UserUpdateAccount request){
         User user = userRepository.getById(userID);
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
+        user.setEmail(request.getEmail());
+        user.setName(request.getName());
+        user.setAddress(request.getAddress());
+        user.setNumberPhone(request.getNumberPhone());
         user.setPassword(request.getPassword());
 
         return  userRepository.save(user);
