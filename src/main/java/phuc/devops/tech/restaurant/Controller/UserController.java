@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import phuc.devops.tech.restaurant.Entity.User;
 import phuc.devops.tech.restaurant.Service.UserService;
-import phuc.devops.tech.restaurant.dto.UserCreateAccount;
-import phuc.devops.tech.restaurant.dto.UserUpdateAccount;
+import phuc.devops.tech.restaurant.dto.request.UserCreateAccount;
+import phuc.devops.tech.restaurant.dto.request.UserUpdateAccount;
 
 import java.util.List;
 

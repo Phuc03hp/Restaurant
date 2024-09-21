@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import phuc.devops.tech.restaurant.Entity.Food;
 import phuc.devops.tech.restaurant.Repository.FoodRepository;
-import phuc.devops.tech.restaurant.dto.UserCreateFood;
-import phuc.devops.tech.restaurant.dto.UserUpdateFood;
+import phuc.devops.tech.restaurant.dto.request.UserCreateFood;
+import phuc.devops.tech.restaurant.dto.request.UserUpdateFood;
 
 import java.util.List;
 

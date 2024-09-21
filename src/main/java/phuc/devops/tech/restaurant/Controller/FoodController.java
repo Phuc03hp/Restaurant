@@ -1,12 +1,11 @@
 package phuc.devops.tech.restaurant.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import phuc.devops.tech.restaurant.Entity.Food;
 import phuc.devops.tech.restaurant.Service.FoodService;
-import phuc.devops.tech.restaurant.dto.UserCreateFood;
-import phuc.devops.tech.restaurant.dto.UserUpdateFood;
+import phuc.devops.tech.restaurant.dto.request.UserCreateFood;
+import phuc.devops.tech.restaurant.dto.request.UserUpdateFood;
 
 import java.util.List;
 

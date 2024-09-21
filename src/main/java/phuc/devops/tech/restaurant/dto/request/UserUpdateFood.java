@@ -1,4 +1,4 @@
-package phuc.devops.tech.restaurant.dto;
+package phuc.devops.tech.restaurant.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
