@@ -19,7 +19,7 @@ public class UserService {
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
     @Autowired
     private UserRepository userRepository ;
-
+    private String passEncode;
     public User createUser(UserCreateAccount request){
         if (userRepository.existsByUsername(request.getUsername()))
             throw new AppException(ErrorCode.USER_EXISTED);
@@ -29,7 +29,9 @@ public class UserService {
         user.setName(request.getName());
         user.setAddress(request.getAddress());
         user.setNumberPhone(request.getNumberPhone());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        String password = request.getPassword();
+        passEncode=passwordEncoder.encode(request.getPassword());
+        user.setPassword(passEncode);
         return userRepository.save(user);
     }
 
@@ -39,7 +41,8 @@ public class UserService {
         user.setName(request.getName());
         user.setAddress(request.getAddress());
         user.setNumberPhone(request.getNumberPhone());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        passEncode=passwordEncoder.encode(request.getPassword());
+        user.setPassword(passEncode);
 
         return  userRepository.save(user);
     }
