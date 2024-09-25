@@ -9,7 +9,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreateFood {
-    private String type;
-    private String name;
-    private float price;
+    private String Category;
+    private String FoodName;
+    private float Price;
+    private String Description;
+    private String FoodID;
 }

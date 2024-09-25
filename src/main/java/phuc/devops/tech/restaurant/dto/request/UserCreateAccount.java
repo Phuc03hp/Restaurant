@@ -15,9 +15,9 @@ public class UserCreateAccount {
     @Size(min=8, message = "Password Invalid")
     String password;
 
+    String userID;
+
     String name;
-    Long numberPhone;
-    String email;
-    String address;
+
 
 }

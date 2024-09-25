@@ -16,17 +16,20 @@ public class FoodService {
 
     public Food createFood(UserCreateFood request){
         Food food = new Food();
-        food.setName(request.getName());
+        food.setFoodName(request.getFoodName());
         food.setPrice(request.getPrice());
-        food.setType(request.getType());
+        food.setCategory(request.getCategory());
+        food.setDescription(request.getDescription());
+        food.setFoodID(request.getFoodID());
         return foodRepository.save(food);
     }
 
     public Food updateFood(String foodId,UserUpdateFood request){
         Food food = foodRepository.getById(foodId);
-        food.setName(request.getName());
+        food.setFoodName(request.getFoodName());
         food.setPrice(request.getPrice());
-        food.setType(request.getType());
+        food.setCategory(request.getCategory());
+        food.setDescription(request.getDescription());
         return foodRepository.save(food);
     }
 

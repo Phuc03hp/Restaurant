@@ -19,30 +19,20 @@ public class UserService {
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
     @Autowired
     private UserRepository userRepository ;
-    private String passEncode;
     public User createUser(UserCreateAccount request){
         if (userRepository.existsByUsername(request.getUsername()))
             throw new AppException(ErrorCode.USER_EXISTED);
         User user = new User();
         user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
         user.setName(request.getName());
-        user.setAddress(request.getAddress());
-        user.setNumberPhone(request.getNumberPhone());
-        String password = request.getPassword();
-        passEncode=passwordEncoder.encode(request.getPassword());
-        user.setPassword(passEncode);
+        user.setPassword(passwordEncoder.encode(request.getPassword())) ;
         return userRepository.save(user);
     }
 
     public User updateUser(String userID, UserUpdateAccount request){
         User user = userRepository.findById(userID).orElseThrow(()->new RuntimeException("User not found"));
-        user.setEmail(request.getEmail());
         user.setName(request.getName());
-        user.setAddress(request.getAddress());
-        user.setNumberPhone(request.getNumberPhone());
-        passEncode=passwordEncoder.encode(request.getPassword());
-        user.setPassword(passEncode);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         return  userRepository.save(user);
     }
