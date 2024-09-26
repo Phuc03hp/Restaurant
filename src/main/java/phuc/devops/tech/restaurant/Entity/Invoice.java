@@ -28,6 +28,13 @@ public class Invoice {
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<Food> foods;
 
+    @Column(name = "quantity")
+    private List<Long> quantity;
 
+    @Column(name = "total")
+    private Long total;
 
+    @ManyToOne
+    @JoinColumn(name = "userID", nullable = false)
+    private User user;
 }

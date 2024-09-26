@@ -1,4 +1,5 @@
 package phuc.devops.tech.restaurant.dto.request;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -7,10 +8,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserUpdateFood {
-    private String Category;
-    private String Name;
-    private float Price;
-    private String Description;
-    private String FoodID;
+public class UserUpdateTable {
+    private Long maxCapacity;
+    private String description;
 }

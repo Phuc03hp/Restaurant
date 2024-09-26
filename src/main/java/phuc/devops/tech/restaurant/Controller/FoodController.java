@@ -8,6 +8,7 @@ import phuc.devops.tech.restaurant.dto.request.UserCreateFood;
 import phuc.devops.tech.restaurant.dto.request.UserUpdateFood;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/menu")
@@ -34,6 +35,9 @@ public class FoodController {
     Food getFoodById(@PathVariable String foodID){
         return foodService.getFoodByID(foodID);
     }
+
+    @GetMapping("/{name}")
+    List<Food> getFoodByName(@PathVariable String name) {return foodService.getFoodByName(name);}
 
     @DeleteMapping("/{foodID}")
     String deleteFoodById(@PathVariable String foodID){

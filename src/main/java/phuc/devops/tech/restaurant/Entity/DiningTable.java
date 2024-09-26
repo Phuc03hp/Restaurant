@@ -13,10 +13,10 @@ import java.util.List;
 @Table(name = "DiningTable")
 public class DiningTable {
 
-    @Column(name = "tableID")
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String tableID;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "tableID")
+    private Long tableID;
 
     @Column(name = "maxCapacity")
     private Long maxCapacity;

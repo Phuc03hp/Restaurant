@@ -16,11 +16,11 @@ public class Food {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String foodID;
 
-    @Column(name = "Category")
-    private String Category;
+    @Column(name = "category")
+    private String category;
 
-    @Column(name = "foodName")
-    private String foodName;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "description")
     private String description;
@@ -29,7 +29,7 @@ public class Food {
     private float price;
 
     @ManyToOne
-    @JoinColumn(name = "invoiceID", nullable = false)
+    @JoinColumn(name = "invoiceID", nullable = true)
     private Invoice invoice;
 
     public String getFoodID() {
@@ -41,20 +41,20 @@ public class Food {
     }
 
     public String getCategory() {
-        return Category;
+        return category;
     }
 
     public void setCategory(String category) {
-        Category = category;
+        this.category = category;
     }
 
 
-    public String getFoodName() {
-        return foodName;
+    public String getName() {
+        return name;
     }
 
-    public void setFoodName(String foodName) {
-        this.foodName = foodName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {

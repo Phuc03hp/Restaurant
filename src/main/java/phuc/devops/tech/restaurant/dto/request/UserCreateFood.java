@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreateFood {
     private String Category;
-    private String FoodName;
+    private String Name;
     private float Price;
     private String Description;
     private String FoodID;

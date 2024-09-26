@@ -1,8 +1,11 @@
 package phuc.devops.tech.restaurant.Entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -23,6 +26,7 @@ public class User {
     @Column(name = "name")
     private String name;
 
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    List<Invoice> invoices;
 
 }

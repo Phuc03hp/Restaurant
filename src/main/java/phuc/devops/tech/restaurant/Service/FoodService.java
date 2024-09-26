@@ -2,12 +2,14 @@ package phuc.devops.tech.restaurant.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.ls.LSInput;
 import phuc.devops.tech.restaurant.Entity.Food;
 import phuc.devops.tech.restaurant.Repository.FoodRepository;
 import phuc.devops.tech.restaurant.dto.request.UserCreateFood;
 import phuc.devops.tech.restaurant.dto.request.UserUpdateFood;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class FoodService {
@@ -16,7 +18,7 @@ public class FoodService {
 
     public Food createFood(UserCreateFood request){
         Food food = new Food();
-        food.setFoodName(request.getFoodName());
+        food.setName(request.getName());
         food.setPrice(request.getPrice());
         food.setCategory(request.getCategory());
         food.setDescription(request.getDescription());
@@ -26,7 +28,7 @@ public class FoodService {
 
     public Food updateFood(String foodId,UserUpdateFood request){
         Food food = foodRepository.getById(foodId);
-        food.setFoodName(request.getFoodName());
+        food.setName(request.getName());
         food.setPrice(request.getPrice());
         food.setCategory(request.getCategory());
         food.setDescription(request.getDescription());
@@ -39,6 +41,10 @@ public class FoodService {
 
     public Food getFoodByID(String foodId){
         return foodRepository.getById(foodId);
+    }
+
+    public List<Food> getFoodByName (String foodName) {
+        return foodRepository.findByName(foodName);
     }
 
     public void deleteFood(String foodId){
