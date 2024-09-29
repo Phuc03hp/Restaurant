@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.lang.model.element.NestingKind;
 
+@Data
 @Entity
 @NoArgsConstructor
 @Table(name = "foods")
@@ -31,53 +32,4 @@ public class Food {
     @ManyToOne
     @JoinColumn(name = "invoiceID", nullable = true)
     private Invoice invoice;
-
-    public String getFoodID() {
-        return foodID;
-    }
-
-    public void setFoodID(String foodID) {
-        this.foodID = foodID;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public float getPrice() {
-        return price;
-    }
-
-    public void setPrice(float price) {
-        this.price = price;
-    }
-
-    public Invoice getInvoice() {
-        return invoice;
-    }
-
-    public void setInvoice(Invoice invoice) {
-        this.invoice = invoice;
-    }
 }

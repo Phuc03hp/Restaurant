@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.ls.LSInput;
 import phuc.devops.tech.restaurant.Entity.Food;
+import phuc.devops.tech.restaurant.ExceptionHandling.AppException;
+import phuc.devops.tech.restaurant.ExceptionHandling.ErrorCode;
 import phuc.devops.tech.restaurant.Repository.FoodRepository;
 import phuc.devops.tech.restaurant.dto.request.UserCreateFood;
 import phuc.devops.tech.restaurant.dto.request.UserUpdateFood;
@@ -17,6 +19,8 @@ public class FoodService {
     private FoodRepository foodRepository;
 
     public Food createFood(UserCreateFood request){
+//        if(foodRepository.existedByName(request.getName()))
+//            throw new AppException(ErrorCode.FOOD_NAME_EXISTED);
         Food food = new Food();
         food.setName(request.getName());
         food.setPrice(request.getPrice());
@@ -43,7 +47,7 @@ public class FoodService {
         return foodRepository.getById(foodId);
     }
 
-    public List<Food> getFoodByName (String foodName) {
+    public Food getFoodByName (String foodName) {
         return foodRepository.findByName(foodName);
     }
 

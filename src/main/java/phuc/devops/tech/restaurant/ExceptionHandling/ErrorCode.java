@@ -10,6 +10,8 @@ public enum ErrorCode {
     USERNAME_INVALID(1003, "Username must be at least 3 characters"),
     INVALID_PASSWORD(1004, "Password must be at least 8 characters"),
     USER_NOT_EXISTED(1005, "User not existed"),
+    FOOD_NAME_EXISTED(1006, "Name's food existed"),
+    FOOD_NAME_NOT_EXISTED(1007, "Name's food not existed"),
     ;
 
     ErrorCode(int code, String message) {

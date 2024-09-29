@@ -3,21 +3,21 @@ package phuc.devops.tech.restaurant.Entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.extern.java.Log;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @Table(name = "invoice")
-public class Invoice {
+public class Invoice  implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.UUID) // này nó có tự sinh kh , cos nhes
     private String invoiceID;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "customerID", nullable = false)
     private Customer customer;
 
@@ -26,13 +26,13 @@ public class Invoice {
     private DiningTable diningTable;
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    List<Food> foods;
+    private List<Food> foods;
 
     @Column(name = "quantity")
     private List<Long> quantity;
 
     @Column(name = "total")
-    private Long total;
+    private Float total;
 
     @ManyToOne
     @JoinColumn(name = "userID", nullable = false)

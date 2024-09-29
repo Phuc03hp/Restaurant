@@ -29,7 +29,6 @@ public class Customer {
     @Column(name = "address")
     private String address;
 
-    @OneToOne(mappedBy = "customer",cascade =  CascadeType.ALL)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Invoice invoice;
-
 }

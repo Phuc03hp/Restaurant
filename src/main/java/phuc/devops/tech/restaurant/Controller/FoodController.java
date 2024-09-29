@@ -31,13 +31,8 @@ public class FoodController {
         return foodService.getFood();
     }
 
-    @GetMapping("/{foodID}")
-    Food getFoodById(@PathVariable String foodID){
-        return foodService.getFoodByID(foodID);
-    }
-
     @GetMapping("/{name}")
-    List<Food> getFoodByName(@PathVariable String name) {return foodService.getFoodByName(name);}
+    Food getFoodByName(@PathVariable String name) {return foodService.getFoodByName(name);}
 
     @DeleteMapping("/{foodID}")
     String deleteFoodById(@PathVariable String foodID){

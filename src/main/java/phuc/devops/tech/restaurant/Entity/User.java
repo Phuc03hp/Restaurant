@@ -5,13 +5,14 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
     @Column(name = "userID")
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -27,6 +28,6 @@ public class User {
     private String name;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    List<Invoice> invoices;
+    private List<Invoice> invoices;
 
 }

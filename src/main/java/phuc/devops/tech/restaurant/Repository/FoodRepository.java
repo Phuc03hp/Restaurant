@@ -9,5 +9,6 @@ import java.util.Set;
 
 @Repository
 public interface FoodRepository extends JpaRepository<Food,String> {
-    List<Food> findByName(String name);
+    // boolean existedByName(String username);
+    Food findByName(String name);
 }
