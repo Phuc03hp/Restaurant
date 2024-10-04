@@ -18,6 +18,7 @@ public class InvoiceResponse {
     private String user_name;
     private String customer_name;
     private String userID;
-    private List<Map<Food, Long>> test;
+    private List<FoodResponse> foodAndQuantity;
+    private List<Float> pricePerFood;
     private Float total;
 }

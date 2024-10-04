@@ -24,5 +24,7 @@ public class DiningTable {
     @Column(name = "description")
     private String description;
 
+    @OneToMany(mappedBy = "diningTable", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Invoice> invoices;
 
 }

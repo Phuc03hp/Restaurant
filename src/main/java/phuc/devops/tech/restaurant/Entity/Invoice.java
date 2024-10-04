@@ -21,7 +21,7 @@ public class Invoice  implements Serializable {
     @JoinColumn(name = "customerID", nullable = false)
     private Customer customer;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "tableID", nullable = false)
     private DiningTable diningTable;
 

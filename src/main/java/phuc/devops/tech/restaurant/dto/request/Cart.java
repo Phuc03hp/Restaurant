@@ -1,16 +1,22 @@
 package phuc.devops.tech.restaurant.dto.request;
 
+import phuc.devops.tech.restaurant.Entity.Food;
+import phuc.devops.tech.restaurant.dto.response.FoodResponse;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Cart {
-    private List<FoodOrderItem> items = new ArrayList<>();
+    private List<FoodResponse> items = new ArrayList<>();
 
-    public void addItem(FoodOrderItem item) {
-        items.add(item);
+    public void addItem(FoodResponse item) {
+        FoodResponse foodResponse = new FoodResponse();
+        foodResponse.setFoodId(item.getFoodId());
+        foodResponse.setQuantity(item.getQuantity());
+        items.add(foodResponse);
     }
 
-    public List<FoodOrderItem> getItems() {
+    public List<FoodResponse> getItems() {
         return items;
     }
 

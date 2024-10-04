@@ -30,5 +30,5 @@ public class Customer {
     private String address;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Invoice invoice;
+    private List<Invoice> invoices;
 }

@@ -1,12 +1,13 @@
 package phuc.devops.tech.restaurant.Service;
 
+import io.netty.util.internal.MathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import phuc.devops.tech.restaurant.Entity.*;
 import phuc.devops.tech.restaurant.Repository.*;
 import phuc.devops.tech.restaurant.dto.request.Cart;
 import phuc.devops.tech.restaurant.dto.request.CheckoutRequest;
-import phuc.devops.tech.restaurant.dto.request.FoodOrderItem;
+import phuc.devops.tech.restaurant.dto.response.FoodResponse;
 import phuc.devops.tech.restaurant.dto.response.InvoiceResponse;
 
 import java.util.ArrayList;
@@ -31,10 +32,14 @@ public class InvoiceService {
     @Autowired
     private FoodRepository foodRepository;
 
-    private static Cart cart = new Cart();
+    private Cart cart = new Cart();
 
-    public void addToCart(FoodOrderItem request){
+    public void addToCart(FoodResponse request){
         cart.addItem(request);
+    }
+
+    public List<FoodResponse> getToCart (){
+        return cart.getItems();
     }
 
     public InvoiceResponse createInvoice(CheckoutRequest request) {
@@ -49,47 +54,31 @@ public class InvoiceService {
         DiningTable diningTable = this.diningTableRepository.findById(request.getTableId())
                 .orElseThrow(() -> new RuntimeException("Table not found"));
 
-        invoice.setCustomer(customer);
-        invoice.setDiningTable(diningTable);
-        invoice.setUser(user);
+        List<FoodResponse> listFoodResponse = new ArrayList<>();
 
-        float totalAmount = 0f;
-        List<Food> listFood = new ArrayList<>();
-        List<Long> listQuantity = new ArrayList<>();
+        List<Float> pricePerFood = new ArrayList<>();
 
-        for (FoodOrderItem item : cart.getItems()) {
-            Food food = item.getFood();
-            food.setInvoice(invoice);  // Liên kết món ăn với hóa đơn hiện tại
-            listFood.add(food);
-            listQuantity.add(item.getQuantity());
-            totalAmount += food.getPrice() * item.getQuantity();
-        }
-
-        invoice.setFoods(listFood);
-        invoice.setTotal(totalAmount);
-        invoice.setQuantity(listQuantity);
-
-        // Lưu hóa đơn và cập nhật response
-        invoiceRepository.saveAndFlush(invoice);
-
-        // Chuẩn bị phản hồi
         InvoiceResponse invoiceResponse = new InvoiceResponse();
+
+        float total = 0.0f;
+
+        for (FoodResponse item : cart.getItems()) {
+            Food food = foodRepository.findById(item.getFoodId()).orElseThrow(()-> new RuntimeException("Food not existed"));
+            listFoodResponse.add(item);
+            float test = 0.0f;
+            test = food.getPrice()* item.getQuantity();
+            pricePerFood.add(test);
+            total+=test;
+        }
+        invoiceResponse.setFoodAndQuantity(listFoodResponse);
+        invoiceResponse.setPricePerFood(pricePerFood);
+        invoiceResponse.setTotal(total);
         invoiceResponse.setTableID(request.getTableId());
         invoiceResponse.setCustomer_name(customer.getName());
         invoiceResponse.setUser_name(user.getName());
         invoiceResponse.setUserID(request.getUserId());
 
-        List<Map<Food, Long>> foodDetails = new ArrayList<>();
-        for (int i = 0; i < listFood.size(); i++) {
-            Map<Food, Long> foodDetail = new HashMap<>();
-            foodDetail.put(listFood.get(i), listQuantity.get(i));
-            foodDetails.add(foodDetail);
-        }
-
-        invoiceResponse.setTest(foodDetails);
-        invoiceResponse.setTotal(totalAmount);
-
-        cart.clear();  // Xóa giỏ hàng sau khi tạo hóa đơn
+        cart.clear();
 
         return invoiceResponse;
     }
@@ -100,22 +89,22 @@ public class InvoiceService {
         return "Invoice has been deleted";
     }
 
-    public InvoiceResponse getInvoice(String invoiceId){
-        Invoice invoice= invoiceRepository.findById(invoiceId)
-                .orElseThrow(()-> new RuntimeException("Invoice unavailable"));
-
-        InvoiceResponse invoiceResponse = new InvoiceResponse();
-        invoiceResponse.setTableID(invoice.getDiningTable().getTableID());
-        invoiceResponse.setCustomer_name(invoice.getCustomer().getName());
-        invoiceResponse.setUser_name(invoice.getUser().getName());
-        invoiceResponse.setUserID(invoice.getUser().getUserID());
-        List<Food> foods = invoice.getFoods();
-        List<Long> quantities = invoice.getQuantity();
-        for(int i=0; i< foods.size();i++ ){
-            Map<Food, Long> test1 = new HashMap<>();
-            test1.put(foods.get(i),quantities.get(i));
-            invoiceResponse.getTest().add(test1);
-        }
-        return invoiceResponse;
-    }
+//    public InvoiceResponse getInvoice(String invoiceId){
+//        Invoice invoice= invoiceRepository.findById(invoiceId)
+//                .orElseThrow(()-> new RuntimeException("Invoice unavailable"));
+//
+//        InvoiceResponse invoiceResponse = new InvoiceResponse();
+//        invoiceResponse.setTableID(invoice.getDiningTable().getTableID());
+//        invoiceResponse.setCustomer_name(invoice.getCustomer().getName());
+//        invoiceResponse.setUser_name(invoice.getUser().getName());
+//        invoiceResponse.setUserID(invoice.getUser().getUserID());
+//        List<Food> foods = invoice.getFoods();
+//        List<Long> quantities = invoice.getQuantity();
+//        for(int i=0; i< foods.size();i++ ){
+//            Map<Food, Long> test1 = new HashMap<>();
+//            test1.put(foods.get(i),quantities.get(i));
+//            invoiceResponse.getTest().add(test1);
+//        }
+//        return invoiceResponse;
+//    }
 }
