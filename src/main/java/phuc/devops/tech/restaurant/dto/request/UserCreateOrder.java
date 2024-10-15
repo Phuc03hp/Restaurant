@@ -1,15 +1,17 @@
 package phuc.devops.tech.restaurant.dto.request;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserCreateFood {
-    private String nameCategory;
-    private String name;
-    private float price;
-    private String description;
+public class UserCreateOrder {
+    private Long tableID;
+    private List<String> foodNames;
+    private List<Long> quantities;
 }

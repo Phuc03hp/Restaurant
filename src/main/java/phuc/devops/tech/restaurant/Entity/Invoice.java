@@ -13,28 +13,21 @@ import java.util.List;
 @Table(name = "invoice")
 public class Invoice  implements Serializable {
 
+    @Column(name = "invoiceID")
     @Id
     @GeneratedValue(strategy = GenerationType.UUID) // này nó có tự sinh kh , cos nhes
     private String invoiceID;
+
+    @OneToOne
+    @JoinColumn(name = "orderID", nullable = false)
+    private Order order;
 
     @ManyToOne
     @JoinColumn(name = "customerID", nullable = false)
     private Customer customer;
 
     @ManyToOne
-    @JoinColumn(name = "tableID", nullable = false)
-    private DiningTable diningTable;
-
-    @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Food> foods;
-
-    @Column(name = "quantity")
-    private List<Long> quantity;
-
-    @Column(name = "total")
-    private Float total;
-
-    @ManyToOne
     @JoinColumn(name = "userID", nullable = false)
     private User user;
+
 }

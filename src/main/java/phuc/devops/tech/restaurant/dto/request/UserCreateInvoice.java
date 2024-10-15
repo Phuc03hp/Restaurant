@@ -1,15 +1,15 @@
 package phuc.devops.tech.restaurant.dto.request;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import phuc.devops.tech.restaurant.Entity.Order;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserCreateFood {
-    private String nameCategory;
-    private String name;
-    private float price;
-    private String description;
+public class UserCreateInvoice {
+    String userID;
+    String customerID;
 }

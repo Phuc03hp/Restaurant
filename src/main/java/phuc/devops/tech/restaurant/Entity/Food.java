@@ -1,24 +1,27 @@
 package phuc.devops.tech.restaurant.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.lang.model.element.NestingKind;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
 @NoArgsConstructor
 @Table(name = "foods")
 public class Food {
-    @Column(name = "foodID")
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "food_id")
     private String foodID;
 
-    @Column(name = "category")
-    private String category;
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
     @Column(name = "name")
     private String name;
@@ -29,7 +32,12 @@ public class Food {
     @Column(name = "price")
     private float price;
 
-    @ManyToOne
-    @JoinColumn(name = "invoiceID", nullable = true)
-    private Invoice invoice;
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "order_foods",
+            joinColumns = @JoinColumn(name = "food_id"),
+            inverseJoinColumns = @JoinColumn(name = "order_id")
+    )
+    private List<Order> orders = new ArrayList<>();
 }

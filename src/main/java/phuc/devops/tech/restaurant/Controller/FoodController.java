@@ -22,7 +22,7 @@ public class FoodController {
     }
 
     @PutMapping
-    Food updateFood(@PathVariable String foodID ,UserUpdateFood request ){
+    Food updateFood(@PathVariable String foodID , @RequestBody UserUpdateFood request ){
         return foodService.updateFood(foodID,request);
     }
 

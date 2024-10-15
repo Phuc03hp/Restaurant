@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateFood {
-    private String Category;
+    private String NameCategory;
     private String Name;
     private float Price;
     private String Description;

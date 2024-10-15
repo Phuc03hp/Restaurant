@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import phuc.devops.tech.restaurant.Entity.Customer;
+import phuc.devops.tech.restaurant.Repository.CustomerRepository;
 import phuc.devops.tech.restaurant.Service.CustomerService;
 import phuc.devops.tech.restaurant.dto.request.UserCreateCustomer;
 import phuc.devops.tech.restaurant.dto.request.UserUpdateCustomer;
@@ -20,6 +21,7 @@ public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
+    private CustomerRepository customerRepository;
 
     @PostMapping
     public Customer createCustomer(@RequestBody UserCreateCustomer request){
@@ -33,7 +35,8 @@ public class CustomerController {
 
     @DeleteMapping("/{customerID}")
     public String deleteCustomer(@PathVariable String customerId){
-        return customerService.deleteCustomer(customerId);
+        customerRepository.deleteById(customerId);
+        return "Customer has been deleted";
     }
 
     @PutMapping("/{customerID}")

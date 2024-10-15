@@ -4,6 +4,7 @@ package phuc.devops.tech.restaurant.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import phuc.devops.tech.restaurant.Entity.Food;
+import phuc.devops.tech.restaurant.Entity.Order;
 
 import java.util.List;
 import java.util.Map;
@@ -14,11 +15,9 @@ import java.util.Map;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InvoiceResponse {
-    private Long tableID;
-    private String user_name;
-    private String customer_name;
-    private String userID;
-    private List<FoodResponse> foodAndQuantity;
-    private List<Float> pricePerFood;
-    private Float total;
+    String invoiceID;
+    Order order;
+    String customerName;
+    String userName;
+    String userID;
 }

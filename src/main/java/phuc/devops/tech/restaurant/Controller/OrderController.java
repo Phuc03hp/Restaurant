@@ -3,12 +3,16 @@ package phuc.devops.tech.restaurant.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import phuc.devops.tech.restaurant.Entity.DiningTable;
+import phuc.devops.tech.restaurant.Entity.Food;
+import phuc.devops.tech.restaurant.Entity.Order;
 import phuc.devops.tech.restaurant.Service.DiningTableService;
-import phuc.devops.tech.restaurant.Service.InvoiceService;
+import phuc.devops.tech.restaurant.Service.OrderService;
 import phuc.devops.tech.restaurant.dto.request.CheckoutRequest;
+import phuc.devops.tech.restaurant.dto.request.UserCreateOrder;
 import phuc.devops.tech.restaurant.dto.request.UserCreateTable;
 import phuc.devops.tech.restaurant.dto.response.FoodResponse;
 import phuc.devops.tech.restaurant.dto.response.InvoiceResponse;
+import phuc.devops.tech.restaurant.dto.response.OrderResponse;
 
 import java.util.List;
 
@@ -20,7 +24,7 @@ public class OrderController {
     private DiningTableService diningTableService;
 
     @Autowired
-    private InvoiceService invoiceService;
+    private OrderService orderService;
 
     @PostMapping("/createTable")
     public DiningTable createTable(@RequestBody UserCreateTable request){
@@ -32,28 +36,14 @@ public class OrderController {
         return diningTableService.getTable();
     }
 
-    @PostMapping("/cart")
-    public void addToCart(@RequestBody FoodResponse request){
-        invoiceService.addToCart(request);
+    @PostMapping
+    public Order createOrder (@RequestBody UserCreateOrder request){
+    return orderService.createOrder(request);
+    //    return "Order has been created";
     }
 
-    @GetMapping("/cart")
-    public List<FoodResponse> getToCart(){
-        return invoiceService.getToCart();
+    @GetMapping("/{orderID}")
+    public OrderResponse getOrder (@PathVariable String orderID){
+        return orderService.getOrderById(orderID);
     }
-
-    @PostMapping("/checkout")
-    public InvoiceResponse checkout(@RequestBody CheckoutRequest request){
-        return invoiceService.createInvoice(request);
-    }
-
-    @DeleteMapping("/invoice/delete/{invoiceId}")
-    public String deleteInvoice(@PathVariable String invoiceId){
-        return invoiceService.deleteInvoice(invoiceId);
-    }
-
-//    @GetMapping("/invoice/{invoiceId}")
-//    public InvoiceResponse getInvoice(@PathVariable String invoiceId){
-//        return invoiceService.getInvoice(invoiceId);
-//    }
 }
