@@ -34,12 +34,14 @@ public class DiningTableService {
     public String setAvailableTable(Long tableID){
         DiningTable diningTable = diningTableRepository.findById(tableID).orElseThrow(()-> new RuntimeException("Cannot find tableID"));
         diningTable.setTableStatus(TableStatus.AVAILABLE);
+        diningTableRepository.save(diningTable);
         return "Table " + diningTable.getTableID() + " is available";
     }
 
     public String setUnavailableTable(Long tableID){
         DiningTable diningTable = diningTableRepository.findById(tableID).orElseThrow(()-> new RuntimeException("Cannot find tableID"));
         diningTable.setTableStatus(TableStatus.UNAVAILABLE);
+        diningTableRepository.save(diningTable);
         return "Table " + diningTable.getTableID() + " is unavailable";
     }
 }
