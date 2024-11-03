@@ -27,7 +27,4 @@ public class DiningTable {
     @OneToMany(mappedBy = "diningTable", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Order> orders;
 
-    @Column(name = "tableStatus")
-    private TableStatus tableStatus;
-
 }

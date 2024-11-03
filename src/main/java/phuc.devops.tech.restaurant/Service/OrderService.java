@@ -9,7 +9,6 @@ import phuc.devops.tech.restaurant.Entity.Order;
 import phuc.devops.tech.restaurant.Repository.DiningTableRepository;
 import phuc.devops.tech.restaurant.Repository.FoodRepository;
 import phuc.devops.tech.restaurant.Repository.OrderRepository;
-import phuc.devops.tech.restaurant.dto.request.TableStatus;
 import phuc.devops.tech.restaurant.dto.request.UserCreateOrder;
 import phuc.devops.tech.restaurant.dto.response.FoodResponse;
 import phuc.devops.tech.restaurant.dto.response.OrderResponse;
@@ -33,18 +32,8 @@ public class OrderService {
 
     @Transactional
     public Order createOrder(UserCreateOrder userCreateOrder) {
-        // Tìm bàn ăn (DiningTable) dựa trên tableID
-        Optional<DiningTable> tableOptional = diningTableRepository.findById(userCreateOrder.getTableID());
-
-        if (!tableOptional.isPresent()) {
-            throw new RuntimeException("Dining Table not found with ID: " + userCreateOrder.getTableID());
-        }
-
-        if (tableOptional.get().getTableStatus() == TableStatus.UNAVAILABLE) {
-            throw new RuntimeException("Table "+userCreateOrder.getTableID()+"unavailable");
-        }
-
-        DiningTable diningTable = tableOptional.get();
+        // Lấy đơn hàng cho bàn ăn từ tableID
+        Order order = getOrCreateOrderForTable(userCreateOrder.getTableID());
 
         // Danh sách để lưu trữ món ăn
         List<Food> foods = new ArrayList<>();
@@ -52,7 +41,9 @@ public class OrderService {
         // Tìm kiếm từng món ăn theo tên và thêm vào danh sách
         for (String foodName : userCreateOrder.getFoodNames()) {
             Food food = foodRepository.findByName(foodName);
-            foods.add(food);
+            if (food != null) {
+                foods.add(food);
+            }
         }
 
         // Tính toán tổng tiền
@@ -63,9 +54,7 @@ public class OrderService {
             total += quantities.get(i) * foods.get(i).getPrice();
         }
 
-        // Tạo mới đối tượng Order
-        Order order = new Order();
-        order.setDiningTable(diningTable);
+        // Cập nhật thông tin cho đơn hàng
         order.setTotal(total);
         order.setQuantity(quantities);
 
@@ -113,5 +102,44 @@ public class OrderService {
 
         return orderResponse;
     }
+
+    @Transactional
+    private Order getOrCreateOrderForTable(Long tableID) {
+        // Tìm bàn ăn (DiningTable) dựa trên tableID
+        Optional<DiningTable> tableOptional = diningTableRepository.findById(tableID);
+
+        if (tableOptional.isEmpty()) {
+            throw new RuntimeException("Dining Table not found with ID: " + tableID);
+        }
+
+        DiningTable diningTable = tableOptional.get();
+
+        // Lấy đơn hàng chưa thanh toán (isPaid = false) cho bàn này
+        List<Order> orders = diningTable.getOrders().stream()
+                .filter(order -> !order.getIsPaid()) // Chỉ lấy đơn hàng chưa thanh toán
+                .toList();
+
+        if (!orders.isEmpty()) {
+            return orders.get(0); // Trả về đơn hàng đầu tiên chưa thanh toán
+        }
+
+        // Nếu không có đơn hàng, tạo mới một đơn hàng
+        Order newOrder = new Order();
+        newOrder.setDiningTable(diningTable);
+        return orderRepository.save(newOrder);
+    }
+
+    @Transactional
+    public void payOrder(String orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        order.setIsPaid(true);
+        orderRepository.save(order);
+    }
+
+    public Order getCurrentOrderForTable(Long tableId) {
+        return getOrCreateOrderForTable(tableId);
+    }
+
 
 }

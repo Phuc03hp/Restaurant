@@ -20,7 +20,7 @@ public class Order {
     public String orderID;
 
     @ManyToOne
-    @JoinColumn(name = "tableID", nullable = false)
+    @JoinColumn(name = "tableID")
     private DiningTable diningTable;
 
     @Column(name = "quantity")
@@ -35,5 +35,8 @@ public class Order {
 
     @ManyToMany(mappedBy = "orders")
     private List<Food> foods = new ArrayList<>();
+
+    @Column(name = "is_paid")
+    private Boolean isPaid = false;
 
 }

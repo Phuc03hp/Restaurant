@@ -31,6 +31,7 @@ public class InvoiceService {
 
     public InvoiceResponse getInvoice(String orderID,UserCreateInvoice request){
         Order order = orderRepository.findById(orderID).orElseThrow(()-> new RuntimeException("OrderID cannot be found"));
+        order.setIsPaid(true);
         Invoice invoice = new Invoice();
         Optional<Customer> customer = customerRepository.findById(request.getCustomerID());
         invoice.setCustomer(customer.get());

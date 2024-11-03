@@ -16,6 +16,7 @@ import phuc.devops.tech.restaurant.dto.response.InvoiceResponse;
 import phuc.devops.tech.restaurant.dto.response.OrderResponse;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/order")
@@ -32,18 +33,6 @@ public class OrderController {
         return diningTableService.createTable(request);
     }
 
-    @PutMapping("/{tableID}/available")
-    public ResponseEntity<String> setTableAvailable(@PathVariable Long tableID) {
-        String response = diningTableService.setAvailableTable(tableID);
-        return ResponseEntity.ok(response);
-    }
-
-    @PutMapping("/{tableID}/unavailable")
-    public ResponseEntity<String> setTableUnavailable(@PathVariable Long tableID) {
-        String response = diningTableService.setUnavailableTable(tableID);
-        return ResponseEntity.ok(response);
-    }
-
     @GetMapping("/tables")
     public List<DiningTable> getTables() {
         return diningTableService.getTable();
@@ -53,6 +42,44 @@ public class OrderController {
     public Order createOrder (@RequestBody UserCreateOrder request){
     return orderService.createOrder(request);
     //    return "Order has been created";
+    }
+
+    @GetMapping("/{tableId}/order")
+    public ResponseEntity<OrderResponse> getOrderForTable(@PathVariable Long tableId) {
+        // Lấy đơn hàng hiện tại cho bàn ăn
+        Order order = orderService.getCurrentOrderForTable(tableId);
+
+        if (order == null) {
+            return ResponseEntity.notFound().build(); // Trả về 404 nếu không có đơn hàng
+        }
+
+        // Chuyển đổi sang DTO
+        OrderResponse orderResponse = convertToDto(order);
+        return ResponseEntity.ok(orderResponse);
+    }
+
+    // Phương thức chuyển đổi Order thành OrderResponse
+    private OrderResponse convertToDto(Order order) {
+        OrderResponse orderResponse = new OrderResponse();
+        orderResponse.setOrderID(order.getOrderID());
+        orderResponse.setTableID(order.getDiningTable().getTableID());
+        orderResponse.setTotal(order.getTotal());
+
+        // Chuyển đổi danh sách món ăn thành DTO
+        List<FoodResponse> foodResponses = order.getFoods().stream()
+                .map(food -> {
+                    FoodResponse foodResponse = new FoodResponse();
+                    foodResponse.setFoodID(food.getFoodID());
+                    foodResponse.setName(food.getName());
+                    foodResponse.setPrice(food.getPrice());
+                    foodResponse.setDescription(food.getDescription());
+                    return foodResponse;
+                })
+                .collect(Collectors.toList());
+
+        orderResponse.setFoods(foodResponses);
+
+        return orderResponse;
     }
 
     @GetMapping("/{orderID}")

@@ -27,21 +27,7 @@ public class DiningTableService {
     public DiningTable createTable(UserCreateTable request){
         DiningTable diningTable = new DiningTable();
         diningTable.setMaxCapacity(request.getMaxCapacity());
-        diningTable.setTableStatus(TableStatus.AVAILABLE);
         return  diningTableRepository.save(diningTable);
     }
 
-    public String setAvailableTable(Long tableID){
-        DiningTable diningTable = diningTableRepository.findById(tableID).orElseThrow(()-> new RuntimeException("Cannot find tableID"));
-        diningTable.setTableStatus(TableStatus.AVAILABLE);
-        diningTableRepository.save(diningTable);
-        return "Table " + diningTable.getTableID() + " is available";
-    }
-
-    public String setUnavailableTable(Long tableID){
-        DiningTable diningTable = diningTableRepository.findById(tableID).orElseThrow(()-> new RuntimeException("Cannot find tableID"));
-        diningTable.setTableStatus(TableStatus.UNAVAILABLE);
-        diningTableRepository.save(diningTable);
-        return "Table " + diningTable.getTableID() + " is unavailable";
-    }
 }
