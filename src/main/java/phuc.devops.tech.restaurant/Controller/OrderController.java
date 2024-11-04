@@ -38,24 +38,27 @@ public class OrderController {
         return diningTableService.getTable();
     }
 
-    @PostMapping("/{tableID}")
-    public Order createOrder (@PathVariable Long tableID,@RequestBody UserCreateOrder request){
-    return orderService.createOrder(tableID,request);
-    //    return "Order has been created";
+    @GetMapping("/table/{tableID}")
+    public ResponseEntity<Order> getOrderForTable(@PathVariable Long tableID) {
+        try {
+            Order order = orderService.getOrCreateOrderForTable(tableID);
+            return ResponseEntity.ok(order);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 
-    @GetMapping("/{tableId}/order")
-    public ResponseEntity<OrderResponse> getOrderForTable(@PathVariable Long tableId) {
-        // Lấy đơn hàng hiện tại cho bàn ăn
-        Order order = orderService.getCurrentOrderForTable(tableId);
-
-        if (order == null) {
-            return ResponseEntity.notFound().build(); // Trả về 404 nếu không có đơn hàng
+    // Thêm món ăn vào đơn hàng của một bàn cụ thể
+    @PostMapping("/table/{tableID}/additems")
+    public ResponseEntity<Order> addItemsToOrder(
+            @PathVariable Long tableID,
+            @RequestBody UserCreateOrder userCreateOrder) {
+        try {
+            Order updatedOrder = orderService.addItemsToOrder(tableID, userCreateOrder);
+            return ResponseEntity.ok(updatedOrder);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(null);
         }
-
-        // Chuyển đổi sang DTO
-        OrderResponse orderResponse = convertToDto(order);
-        return ResponseEntity.ok(orderResponse);
     }
 
     // Phương thức chuyển đổi Order thành OrderResponse

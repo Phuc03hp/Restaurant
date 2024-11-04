@@ -31,12 +31,39 @@ public class OrderService {
     private FoodRepository foodRepository;
 
     @Transactional
-    public Order createOrder( Long tableID, UserCreateOrder userCreateOrder) {
-        // Lấy đơn hàng cho bàn ăn từ tableID
+    public Order getOrCreateOrderForTable(Long tableID) {
+        // Tìm bàn ăn (DiningTable) dựa trên tableID
+        Optional<DiningTable> tableOptional = diningTableRepository.findById(tableID);
+        if (tableOptional.isEmpty()) {
+            throw new RuntimeException("Dining Table not found with ID: " + tableID);
+        }
+
+        DiningTable diningTable = tableOptional.get();
+
+        // Lấy đơn hàng chưa thanh toán (isPaid = false) cho bàn này
+        List<Order> orders = diningTable.getOrders().stream()
+                .filter(order -> !order.getIsPaid()) // Chỉ lấy đơn hàng chưa thanh toán
+                .toList();
+
+        if (!orders.isEmpty()) {
+            return orders.get(0); // Trả về đơn hàng đầu tiên chưa thanh toán
+        }
+
+        // Nếu không có đơn hàng chưa thanh toán, tạo mới một đơn hàng
+        Order newOrder = new Order();
+        newOrder.setDiningTable(diningTable);
+        newOrder.setIsPaid(false); // Đánh dấu là chưa thanh toán
+        return orderRepository.save(newOrder);
+    }
+
+    @Transactional
+    public Order addItemsToOrder(Long tableID, UserCreateOrder userCreateOrder) {
+        // Lấy hoặc tạo đơn hàng chưa thanh toán cho bàn
         Order order = getOrCreateOrderForTable(tableID);
 
         // Danh sách để lưu trữ món ăn
         List<Food> foods = new ArrayList<>();
+        List<Long> quantities = userCreateOrder.getQuantities();
 
         // Tìm kiếm từng món ăn theo tên và thêm vào danh sách
         for (String foodName : userCreateOrder.getFoodNames()) {
@@ -46,30 +73,39 @@ public class OrderService {
             }
         }
 
-        // Tính toán tổng tiền
-        float total = 0.0f;
-        List<Long> quantities = userCreateOrder.getQuantities();
+        // Tính toán và cập nhật tổng tiền cho đơn hàng
+        float total = order.getTotal() != null ? order.getTotal() : 0.0f;
 
         for (int i = 0; i < quantities.size(); i++) {
             total += quantities.get(i) * foods.get(i).getPrice();
         }
-
-        // Cập nhật thông tin cho đơn hàng
         order.setTotal(total);
-        order.setQuantity(quantities);
 
-        // Thiết lập mối quan hệ hai chiều giữa Order và Food
-        for (int i = 0; i < foods.size(); i++) {
-            Food food = foods.get(i);
+        // Cập nhật danh sách số lượng và món ăn vào đơn hàng
+        order.getQuantity().addAll(quantities);
+        for (Food food : foods) {
             food.getOrders().add(order);
             order.getFoods().add(food);
         }
 
-        // Lưu Order vào CSDL
+        // Lưu đơn hàng cập nhật vào CSDL
         return orderRepository.save(order);
     }
 
 
+    @Transactional
+    public void payOrder(String orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        order.setIsPaid(true);
+        orderRepository.save(order);
+    }
+
+    public Order getCurrentOrderForTable(Long tableId) {
+        return getOrCreateOrderForTable(tableId);
+    }
+
+    @Transactional
     public OrderResponse getOrderById(String orderID) {
         // Tìm kiếm đơn hàng theo orderID
         Optional<Order> orderOptional = orderRepository.findById(orderID);
@@ -102,44 +138,4 @@ public class OrderService {
 
         return orderResponse;
     }
-
-    @Transactional
-    private Order getOrCreateOrderForTable(Long tableID) {
-        // Tìm bàn ăn (DiningTable) dựa trên tableID
-        Optional<DiningTable> tableOptional = diningTableRepository.findById(tableID);
-
-        if (tableOptional.isEmpty()) {
-            throw new RuntimeException("Dining Table not found with ID: " + tableID);
-        }
-
-        DiningTable diningTable = tableOptional.get();
-
-        // Lấy đơn hàng chưa thanh toán (isPaid = false) cho bàn này
-        List<Order> orders = diningTable.getOrders().stream()
-                .filter(order -> !order.getIsPaid()) // Chỉ lấy đơn hàng chưa thanh toán
-                .toList();
-
-        if (!orders.isEmpty()) {
-            return orders.get(0); // Trả về đơn hàng đầu tiên chưa thanh toán
-        }
-
-        // Nếu không có đơn hàng, tạo mới một đơn hàng
-        Order newOrder = new Order();
-        newOrder.setDiningTable(diningTable);
-        return orderRepository.save(newOrder);
-    }
-
-    @Transactional
-    public void payOrder(String orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
-        order.setIsPaid(true);
-        orderRepository.save(order);
-    }
-
-    public Order getCurrentOrderForTable(Long tableId) {
-        return getOrCreateOrderForTable(tableId);
-    }
-
-
 }
