@@ -36,8 +36,14 @@ public class Order {
     @Column(name = "total")
     private Float total;
 
-    @ManyToMany(mappedBy = "orders")
+    @ManyToMany
+    @JoinTable(
+            name = "order_foods",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "food_id")
+    )
     private List<Food> foods = new ArrayList<>();
+
 
     @Column(name = "is_paid")
     private Boolean isPaid = false;

@@ -66,10 +66,10 @@ public class OrderService {
         Hibernate.initialize(order.getFoods());
 
         // Khởi tạo danh sách nếu chưa có
-        List<Food> foodsInOrder = order.getFoods();
-        if (foodsInOrder == null) {
-            foodsInOrder = new ArrayList<>();
-        }
+        List<Food> foodsInOrder = new ArrayList<>();
+//        if (foodsInOrder == null) {
+//            foodsInOrder = new ArrayList<>();
+//        }
 
         List<Long> quantitiesInOrder = order.getQuantity();
         if (quantitiesInOrder == null) {
@@ -86,21 +86,9 @@ public class OrderService {
         for (int i = 0; i < foodNames.size(); i++) {
             String foodName = foodNames.get(i);
             Food food = foodRepository.findByName(foodName);
+            foodsInOrder.add(food);
+            total += newQuantities.get(i) * food.getPrice();
 
-            if (food != null) {
-                // Thêm món ăn vào danh sách nếu chưa có
-                if (!foodsInOrder.contains(food)) {
-                    foodsInOrder.add(food);
-                    quantitiesInOrder.add(newQuantities.get(i));
-                } else {
-                    // Nếu món ăn đã có, cập nhật số lượng
-                    int index = foodsInOrder.indexOf(food);
-                    quantitiesInOrder.set(index, quantitiesInOrder.get(index) + newQuantities.get(i));
-                }
-
-                // Cập nhật tổng tiền
-                total += newQuantities.get(i) * food.getPrice();
-            }
         }
 
         // Cập nhật danh sách món ăn và tổng tiền vào đơn hàng

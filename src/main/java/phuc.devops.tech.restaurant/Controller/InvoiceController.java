@@ -22,11 +22,6 @@ public class InvoiceController {
     @Autowired
     InvoiceService invoiceService;
     OrderService orderService;
-    @PostMapping("/{orderID}")
-    public InvoiceResponse getInvoice(@PathVariable String orderID, @RequestBody UserCreateInvoice request){
-
-        return invoiceService.getInvoice(orderID,request);
-    }
 
     @PostMapping("/{tableID}")
     public InvoiceResponse payment(@PathVariable Long tableID, @RequestBody UserCreateInvoice request){
