@@ -61,7 +61,6 @@ public class OrderService {
         // Lấy hoặc tạo đơn hàng chưa thanh toán cho bàn
         Order order = getOrCreateOrderForTable(tableID);
 
-        // Danh sách để lưu trữ món ăn
         List<Food> foods = new ArrayList<>();
         List<Long> quantities = userCreateOrder.getQuantities();
 
@@ -82,21 +81,16 @@ public class OrderService {
         order.setTotal(total);
 
         // Cập nhật danh sách số lượng và món ăn vào đơn hàng
-        order.getQuantity().addAll(quantities);
-        for (Food food : foods) {
-            food.getOrders().add(order);
-            order.getFoods().add(food);
-        }
-
+        order.setFoods(foods);
+        order.setQuantity(quantities);
         // Lưu đơn hàng cập nhật vào CSDL
         return orderRepository.save(order);
     }
 
 
     @Transactional
-    public void payOrder(String orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+    public void payOrder(Long tableID) {
+        Order order = getCurrentOrderForTable(tableID);
         order.setIsPaid(true);
         orderRepository.save(order);
     }

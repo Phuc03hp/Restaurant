@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import phuc.devops.tech.restaurant.Entity.Order;
 import phuc.devops.tech.restaurant.Entity.User;
 import phuc.devops.tech.restaurant.Service.InvoiceService;
+import phuc.devops.tech.restaurant.Service.OrderService;
 import phuc.devops.tech.restaurant.dto.request.UserCreateInvoice;
 import phuc.devops.tech.restaurant.dto.response.InvoiceResponse;
 
@@ -20,11 +21,17 @@ import java.util.Optional;
 public class InvoiceController {
     @Autowired
     InvoiceService invoiceService;
-
+    OrderService orderService;
     @PostMapping("/{orderID}")
     public InvoiceResponse getInvoice(@PathVariable String orderID, @RequestBody UserCreateInvoice request){
 
         return invoiceService.getInvoice(orderID,request);
+    }
+
+    @PostMapping("/{tableID}")
+    public String payment(@PathVariable Long tableID){
+        orderService.payOrder(tableID);
+        return "Invoice has been checkout";
     }
 
     @GetMapping("/recheck/{invoiceID}")

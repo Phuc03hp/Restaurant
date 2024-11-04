@@ -49,16 +49,12 @@ public class OrderController {
     }
 
     // Thêm món ăn vào đơn hàng của một bàn cụ thể
-    @PostMapping("/table/{tableID}/additems")
+    @PostMapping("/table/{tableID}/add_items")
     public ResponseEntity<Order> addItemsToOrder(
             @PathVariable Long tableID,
             @RequestBody UserCreateOrder userCreateOrder) {
-        try {
             Order updatedOrder = orderService.addItemsToOrder(tableID, userCreateOrder);
             return ResponseEntity.ok(updatedOrder);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
     }
 
     // Phương thức chuyển đổi Order thành OrderResponse
