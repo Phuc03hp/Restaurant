@@ -31,9 +31,9 @@ public class OrderService {
     private FoodRepository foodRepository;
 
     @Transactional
-    public Order createOrder(UserCreateOrder userCreateOrder) {
+    public Order createOrder( Long tableID, UserCreateOrder userCreateOrder) {
         // Lấy đơn hàng cho bàn ăn từ tableID
-        Order order = getOrCreateOrderForTable(userCreateOrder.getTableID());
+        Order order = getOrCreateOrderForTable(tableID);
 
         // Danh sách để lưu trữ món ăn
         List<Food> foods = new ArrayList<>();

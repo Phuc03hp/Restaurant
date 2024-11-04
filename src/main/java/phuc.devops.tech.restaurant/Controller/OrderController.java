@@ -38,9 +38,9 @@ public class OrderController {
         return diningTableService.getTable();
     }
 
-    @PostMapping
-    public Order createOrder (@RequestBody UserCreateOrder request){
-    return orderService.createOrder(request);
+    @PostMapping("/{tableID}")
+    public Order createOrder (@PathVariable Long tableID,@RequestBody UserCreateOrder request){
+    return orderService.createOrder(tableID,request);
     //    return "Order has been created";
     }
 

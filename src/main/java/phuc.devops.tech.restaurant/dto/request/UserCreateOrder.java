@@ -11,7 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreateOrder {
-    private Long tableID;
     private List<String> foodNames;
     private List<Long> quantities;
 }
