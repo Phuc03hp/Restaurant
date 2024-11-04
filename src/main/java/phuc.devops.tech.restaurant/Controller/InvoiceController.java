@@ -29,9 +29,10 @@ public class InvoiceController {
     }
 
     @PostMapping("/{tableID}")
-    public String payment(@PathVariable Long tableID){
-        orderService.payOrder(tableID);
-        return "Invoice has been checkout";
+    public InvoiceResponse payment(@PathVariable Long tableID, @RequestBody UserCreateInvoice request){
+        Order order = orderService.getCurrentOrderForTable(tableID);
+        order.setIsPaid(true);
+        return invoiceService.getInvoice(order.getOrderID(),request);
     }
 
     @GetMapping("/recheck/{invoiceID}")
