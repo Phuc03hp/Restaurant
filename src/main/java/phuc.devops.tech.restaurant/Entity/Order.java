@@ -23,8 +23,11 @@ public class Order {
     @JoinColumn(name = "tableID")
     private DiningTable diningTable;
 
+    @ElementCollection
+    @CollectionTable(name = "order_quantities", joinColumns = @JoinColumn(name = "order_id"))
     @Column(name = "quantity")
-    private List<Long> quantity;
+    private List<Long> quantity = new ArrayList<>();
+
 
     @JsonIgnore
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -1,6 +1,7 @@
 package phuc.devops.tech.restaurant.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import phuc.devops.tech.restaurant.Entity.DiningTable;
@@ -17,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.hibernate.Hibernate;
+
 
 @Service
 public class OrderService {
@@ -60,32 +63,55 @@ public class OrderService {
     public Order addItemsToOrder(Long tableID, UserCreateOrder userCreateOrder) {
         // Lấy hoặc tạo đơn hàng chưa thanh toán cho bàn
         Order order = getOrCreateOrderForTable(tableID);
+        Hibernate.initialize(order.getFoods());
 
-        List<Food> foods = new ArrayList<>();
-        List<Long> quantities = userCreateOrder.getQuantities();
+        // Khởi tạo danh sách nếu chưa có
+        List<Food> foodsInOrder = order.getFoods();
+        if (foodsInOrder == null) {
+            foodsInOrder = new ArrayList<>();
+        }
+
+        List<Long> quantitiesInOrder = order.getQuantity();
+        if (quantitiesInOrder == null) {
+            quantitiesInOrder = new ArrayList<>();
+        }
+
+        // Tính tổng tiền ban đầu
+        float total = 0.0f;
 
         // Tìm kiếm từng món ăn theo tên và thêm vào danh sách
-        for (String foodName : userCreateOrder.getFoodNames()) {
+        List<Long> newQuantities = userCreateOrder.getQuantities();
+        List<String> foodNames = userCreateOrder.getFoodNames();
+
+        for (int i = 0; i < foodNames.size(); i++) {
+            String foodName = foodNames.get(i);
             Food food = foodRepository.findByName(foodName);
+
             if (food != null) {
-                foods.add(food);
+                // Thêm món ăn vào danh sách nếu chưa có
+                if (!foodsInOrder.contains(food)) {
+                    foodsInOrder.add(food);
+                    quantitiesInOrder.add(newQuantities.get(i));
+                } else {
+                    // Nếu món ăn đã có, cập nhật số lượng
+                    int index = foodsInOrder.indexOf(food);
+                    quantitiesInOrder.set(index, quantitiesInOrder.get(index) + newQuantities.get(i));
+                }
+
+                // Cập nhật tổng tiền
+                total += newQuantities.get(i) * food.getPrice();
             }
         }
 
-        // Tính toán và cập nhật tổng tiền cho đơn hàng
-        float total = order.getTotal() != null ? order.getTotal() : 0.0f;
-
-        for (int i = 0; i < quantities.size(); i++) {
-            total += quantities.get(i) * foods.get(i).getPrice();
-        }
+        // Cập nhật danh sách món ăn và tổng tiền vào đơn hàng
+        order.setFoods(foodsInOrder);
+        order.setQuantity(newQuantities);
         order.setTotal(total);
 
-        // Cập nhật danh sách số lượng và món ăn vào đơn hàng
-        order.setFoods(foods);
-        order.setQuantity(quantities);
         // Lưu đơn hàng cập nhật vào CSDL
         return orderRepository.save(order);
     }
+
 
 
     @Transactional
