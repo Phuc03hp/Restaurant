@@ -43,7 +43,7 @@ public class CustomerService {
 
     public String deleteCustomer(String customerID){
         customerRepository.deleteById(customerID);
-        return "Customer has been deleted";
+        return "Customer hase been deleted";
     }
 
     public List<Customer> getCustomers(){
