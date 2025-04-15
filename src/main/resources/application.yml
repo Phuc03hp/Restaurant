@@ -5,11 +5,14 @@ server:
 
 spring:
   datasource:
-    url: ${DBMS_CONNECTION:jdbc:mysql://mysql:3306/restaurant}
-    username: ${DBMS_PASSWORD:root}
-    password: ${DBMS_PASSWORD:root}
+    url: jdbc:mysql://localhost:3306/restaurant?serverTimezone=Asia/Ho_Chi_Minh
+    username: root
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+    properties:
+      # Hibernate sẽ gửi/nhận timestamp theo múi Asia/Ho_Chi_Minh
+      hibernate.jdbc.time_zone: Asia/Ho_Chi_Minh

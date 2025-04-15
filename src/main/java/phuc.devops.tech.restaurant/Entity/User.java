@@ -30,4 +30,6 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Invoice> invoices;
 
+    //Add role
+
 }
