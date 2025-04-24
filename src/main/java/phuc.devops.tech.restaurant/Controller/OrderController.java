@@ -57,7 +57,7 @@ public class OrderController {
             Order updatedOrder = orderService.addItemsToOrder(tableID, userCreateOrder);
             return ResponseEntity.ok(updatedOrder);
         } catch (Exception e) {
-            e.printStackTrace(); // In ra lỗi để debug
+            e.printStackTrace();
             return ResponseEntity.status(500).body("Lỗi khi thêm món vào order: " + e.getMessage());
         }
     }

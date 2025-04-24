@@ -88,7 +88,7 @@ public class OrderService {
             Food food = foodRepository.findByName(foodName);
 
             if (food == null) {
-                throw new RuntimeException("Không tìm thấy món ăn: " + foodName);
+                throw new RuntimeException("Not found:" + foodName);
             }
 
             foodsInOrder.add(food);
