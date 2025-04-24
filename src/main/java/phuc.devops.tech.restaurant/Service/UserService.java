@@ -8,8 +8,8 @@ import phuc.devops.tech.restaurant.Entity.User;
 import phuc.devops.tech.restaurant.ExceptionHandling.AppException;
 import phuc.devops.tech.restaurant.ExceptionHandling.ErrorCode;
 import phuc.devops.tech.restaurant.Repository.UserRepository;
-import phuc.devops.tech.restaurant.dto.request.UserCreateAccount;
-import phuc.devops.tech.restaurant.dto.request.UserUpdateAccount;
+import phuc.devops.tech.restaurant.dto.request.AdminCreateAccountUser;
+import phuc.devops.tech.restaurant.dto.request.AdminUpdateAccountUser;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class UserService {
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
     @Autowired
     private UserRepository userRepository ;
-    public User createUser(UserCreateAccount request){
+    public User createUser(AdminCreateAccountUser request){
         if (userRepository.existsByUsername(request.getUsername()))
             throw new AppException(ErrorCode.USER_EXISTED);
         User user = new User();
@@ -29,7 +29,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User updateUser(String userID, UserUpdateAccount request){
+    public User updateUser(String userID, AdminUpdateAccountUser request){
         User user = userRepository.findById(userID).orElseThrow(()->new RuntimeException("User not found"));
         user.setName(request.getName());
         user.setPassword(passwordEncoder.encode(request.getPassword()));

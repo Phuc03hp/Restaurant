@@ -9,9 +9,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserUpdateAccount {
+public class AdminUpdateAccountAdmin {
      @Size(min = 5, message = "Username Invalid")
-     String username;
+     String AdminName;
 
      @Size(min=8, message = "Password Invalid")
      String password;

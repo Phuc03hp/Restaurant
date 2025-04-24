@@ -1,7 +1,6 @@
 package phuc.devops.tech.restaurant.Entity;
 
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,24 +10,20 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "users")
-public class User implements Serializable {
-    @Column(name = "userID")
+@Table(name = "Admin")
+public class Admin implements Serializable {
+    @Column(name = "adminID")
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String userID;
+    private String adminID;
 
-    @Column(name = "username")
-    private String username;
+    @Column(name = "adminName")
+    private String adminName;
 
     @Column(name = "password")
     private String password;
 
     @Column(name = "name")
     private String name;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Invoice> invoices;
-    
 
 }

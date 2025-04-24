@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserCreateAccount {
+public class AdminCreateAccountUser {
     @Size(min = 5, message = "Username Invalid")
     String username;
 

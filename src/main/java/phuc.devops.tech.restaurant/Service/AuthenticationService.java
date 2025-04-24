@@ -22,5 +22,8 @@ public class AuthenticationService {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         return passwordEncoder.matches(request.getPassword(), user.getPassword());
     }
-}
 
+    public void logout(){
+        System.out.println("You has logout");
+    }
+}

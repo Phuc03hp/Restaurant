@@ -29,5 +29,11 @@ public class AuthenticationController {
                         .build())
                 .build();
     }
-    //logout
+    @PostMapping("/logout")
+    public ApiResponse<String> logout(){
+        authenticationService.logout();
+        return ApiResponse.<String>builder()
+                .result("Đăng xuất thành công")
+                .build();
+    }
 }
