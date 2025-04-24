@@ -86,11 +86,14 @@ public class OrderService {
         for (int i = 0; i < foodNames.size(); i++) {
             String foodName = foodNames.get(i);
             Food food = foodRepository.findByName(foodName);
+
+            if (food == null) {
+                throw new RuntimeException("Not found:" + foodName);
+            }
+
             foodsInOrder.add(food);
             total += newQuantities.get(i) * food.getPrice();
-
         }
-
         // Cập nhật danh sách món ăn và tổng tiền vào đơn hàng
         order.setFoods(foodsInOrder);
         order.setQuantity(newQuantities);
