@@ -3,6 +3,7 @@ package phuc.devops.tech.restaurant.Service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,6 @@ public class AuthenticationService {
         return passwordEncoder.matches(request.getPassword(), admin.getPassword());
     }
     public void logout(){
-        System.out.println("You has logout");
+        SecurityContextHolder.clearContext();
     }
 }
