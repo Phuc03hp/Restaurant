@@ -12,6 +12,7 @@ import phuc.devops.tech.restaurant.dto.request.UserCreateInvoice;
 import phuc.devops.tech.restaurant.dto.response.FoodResponse;
 import phuc.devops.tech.restaurant.dto.response.InvoiceResponse;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,4 +60,17 @@ public class InvoiceService {
         invoiceResponse.setCustomerName(invoice.getCustomer().getName());
         return invoiceResponse;
     }
+
+    public Float getRevenueByDate(LocalDate date) {
+        return Optional.ofNullable(invoiceRepository.getRevenueByDate(date)).orElse(0f);
+    }
+
+    public Float getRevenueByMonth(int month, int year) {
+        return Optional.ofNullable(invoiceRepository.getRevenueByMonth(month, year)).orElse(0f);
+    }
+
+    public Float getRevenueByYear(int year) {
+        return Optional.ofNullable(invoiceRepository.getRevenueByYear(year)).orElse(0f);
+    }
+
 }

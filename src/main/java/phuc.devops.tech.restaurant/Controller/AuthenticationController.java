@@ -20,9 +20,18 @@ import phuc.devops.tech.restaurant.dto.response.AuthenticationResponse;
 public class AuthenticationController {
     AuthenticationService authenticationService;
 
-    @PostMapping("/login")
-    ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
-        boolean result = authenticationService.authenticate(request);
+    @PostMapping("/login/user")
+    ApiResponse<AuthenticationResponse> authenticateUser(@RequestBody AuthenticationRequest request){
+        boolean result = authenticationService.authenticateUser(request);
+        return ApiResponse.<AuthenticationResponse>builder()
+                .result(AuthenticationResponse.builder()
+                        .authenticated(result)
+                        .build())
+                .build();
+    }
+    @PostMapping("/login/admin")
+    ApiResponse<AuthenticationResponse> authenticateAdmin(@RequestBody AuthenticationRequest request){
+        boolean result = authenticationService.authenticateAdmin(request);
         return ApiResponse.<AuthenticationResponse>builder()
                 .result(AuthenticationResponse.builder()
                         .authenticated(result)
