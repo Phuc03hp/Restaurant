@@ -3,6 +3,7 @@ package phuc.devops.tech.restaurant.Service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,11 +26,11 @@ public class AuthenticationService {
     }
 
     public boolean authenticateAdmin(AuthenticationRequest request){
-        var admin = adminRepository.findByAdminName(request.getUsername()).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
+        var admin = adminRepository.findByUsername(request.getUsername()).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         return passwordEncoder.matches(request.getPassword(), admin.getPassword());
     }
     public void logout(){
-        System.out.println("You has logout");
+        SecurityContextHolder.clearContext();
     }
 }

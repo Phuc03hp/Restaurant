@@ -17,8 +17,8 @@ public class Admin implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String adminID;
 
-    @Column(name = "adminName")
-    private String adminName;
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "password")
     private String password;

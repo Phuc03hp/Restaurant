@@ -21,10 +21,10 @@ public class AdminService {
     private AdminRepository adminRepository;
 
     public Admin createAdmin(AdminCreateAccountAdmin request){
-        if (adminRepository.existsByAdminName(request.getAdminName()))
+        if (adminRepository.existsByUsername(request.getUsername()))
             throw new AppException(ErrorCode.USER_EXISTED);
         Admin admin = new Admin();
-        admin.setAdminName(request.getAdminName());
+        admin.setUsername(request.getUsername());
         admin.setName(request.getName());
         admin.setPassword(passwordEncoder.encode(request.getPassword())) ;
         return adminRepository.save(admin);
@@ -51,6 +51,6 @@ public class AdminService {
     }
 
     public Admin findByUsername(String username){
-        return adminRepository.findByAdminName(username).orElseThrow();
+        return adminRepository.findByUsername(username).orElseThrow();
     }
 }
