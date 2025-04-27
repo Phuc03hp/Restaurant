@@ -12,12 +12,11 @@ import lombok.experimental.FieldDefaults;
 public class AdminUpdateAccountUser {
      @Size(min = 5, message = "Username Invalid")
      String username;
-
+     String name;
      @Size(min=8, message = "Password Invalid")
      String password;
 
-     String name;
-     Long numberPhone;
-     String email;
-     String address;
+
+
+
 }

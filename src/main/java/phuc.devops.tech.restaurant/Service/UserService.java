@@ -29,15 +29,28 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User updateUser(String userID, AdminUpdateAccountUser request){
-        User user = userRepository.findById(userID).orElseThrow(()->new RuntimeException("User not found"));
-        user.setName(request.getName());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+    public User updateUser(String userID, AdminUpdateAccountUser request) {
+        User user = userRepository.findById(userID)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return  userRepository.save(user);
+        // Cập nhật name
+        user.setName(request.getName());
+
+        // Cập nhật username (nếu cần)
+        if (request.getUsername() != null) {
+            user.setUsername(request.getUsername());
+        }
+
+        // Nếu password được gửi thì mới cập nhật
+        if (request.getPassword() != null && !request.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+
+        return userRepository.save(user);
     }
 
     public void deleteUser(String userID){
+
         userRepository.deleteById(userID);
     }
 
@@ -52,4 +65,5 @@ public class UserService {
     public User findByUsername(String username){
         return userRepository.findByUsername(username).orElseThrow();
     }
+
 }

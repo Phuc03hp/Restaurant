@@ -1,5 +1,6 @@
 package phuc.devops.tech.restaurant.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Data;
@@ -28,6 +29,7 @@ public class User implements Serializable {
     private String name;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Invoice> invoices;
 
 

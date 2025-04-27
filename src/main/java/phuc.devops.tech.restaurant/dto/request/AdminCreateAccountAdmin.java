@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AdminCreateAccountAdmin {
     @Size(min = 5, message = "AdminName Invalid")
-    String AdminName;
+    String adminName;
 
     @Size(min=8, message = "Password Invalid")
     String password;

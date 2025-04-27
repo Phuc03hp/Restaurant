@@ -25,7 +25,7 @@ public class AdminController {
         return adminService.getAdmins();
     }
     @PutMapping("/signup/admin/{adminID}")
-    Admin updateUser(@PathVariable String adminID, AdminUpdateAccountAdmin request){
+    Admin updateUser(@PathVariable String adminID,@RequestBody AdminUpdateAccountAdmin request){
         return adminService.updateAdmin(adminID,request);
     }
     @GetMapping("/signup/admin/{adminID}")
@@ -37,7 +37,7 @@ public class AdminController {
         adminService.deleteAdmin(userID);
         return "User has been deleted";
     }
-    @GetMapping("/admin/{adminName}")
+    @GetMapping("/admin/{username}")
     Admin findByAdminName(@PathVariable String username){
         return adminService.findByUsername(username);
     }

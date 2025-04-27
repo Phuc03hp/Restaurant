@@ -9,4 +9,6 @@ import java.util.List;
 
 @Repository
 public interface DiningTableRepository extends JpaRepository<DiningTable, Long> {
+
+    List<DiningTable> findAll();
 }
