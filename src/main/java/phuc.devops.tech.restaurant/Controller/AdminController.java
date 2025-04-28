@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import phuc.devops.tech.restaurant.Entity.Admin;
 import phuc.devops.tech.restaurant.Entity.User;
+import phuc.devops.tech.restaurant.Repository.UserRepository;
 import phuc.devops.tech.restaurant.Service.AdminService;
+import phuc.devops.tech.restaurant.Service.UserService;
 import phuc.devops.tech.restaurant.dto.request.AdminCreateAccountAdmin;
 import phuc.devops.tech.restaurant.dto.request.AdminCreateAccountUser;
 import phuc.devops.tech.restaurant.dto.request.AdminUpdateAccountAdmin;
@@ -16,6 +18,8 @@ import java.util.List;
 public class AdminController {
     @Autowired
     private AdminService adminService;
+    private UserService userService;
+    private UserRepository userRepository;
     @PostMapping("/signup/admin")
     Admin createAdmin(@RequestBody AdminCreateAccountAdmin request){
         return adminService.createAdmin(request);
@@ -37,8 +41,9 @@ public class AdminController {
         adminService.deleteAdmin(userID);
         return "User has been deleted";
     }
-    @GetMapping("/admin/{adminName}")
+    @GetMapping("/admin/{username}")
     Admin findByAdminName(@PathVariable String username){
         return adminService.findByUsername(username);
     }
+
 }

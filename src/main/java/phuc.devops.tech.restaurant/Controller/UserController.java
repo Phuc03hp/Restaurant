@@ -39,4 +39,9 @@ public class UserController {
     User findByUsername(@PathVariable String username){
         return userService.findByUsername(username);
     }
+
+    @GetMapping("/users")
+    List<User> getListUser(){
+        return userService.getUsers();
+    }
 }
