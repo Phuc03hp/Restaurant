@@ -30,7 +30,7 @@ public class UserController {
     User getUser(@PathVariable String userID){
         return userService.getUser(userID);
     }
-    @DeleteMapping("/signup/user/{userID}")
+    @DeleteMapping("/users/{userID}")
     String deleteUser(@PathVariable String userID){
         userService.deleteUser(userID);
         return "User has been deleted";
@@ -38,5 +38,10 @@ public class UserController {
     @GetMapping("/user/{username}")
     User findByUsername(@PathVariable String username){
         return userService.findByUsername(username);
+    }
+
+    @GetMapping("/users")
+    public List<User> getUser() {
+        return userService.getUsers();
     }
 }

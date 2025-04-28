@@ -37,7 +37,7 @@ public class AdminController {
         adminService.deleteAdmin(userID);
         return "User has been deleted";
     }
-    @GetMapping("/admin/{adminName}")
+    @GetMapping("/admin/{username}")
     Admin findByAdminName(@PathVariable String username){
         return adminService.findByUsername(username);
     }
