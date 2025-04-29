@@ -13,6 +13,7 @@ import phuc.devops.tech.restaurant.dto.response.FoodResponse;
 import phuc.devops.tech.restaurant.dto.response.InvoiceResponse;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +35,7 @@ public class InvoiceService {
         Order order = orderRepository.findById(orderID).orElseThrow(()-> new RuntimeException("OrderID cannot be found"));
         order.setIsPaid(true);
         Invoice invoice = new Invoice();
+        invoice.setCreatedAt(LocalDateTime.now());
         Optional<Customer> customer = customerRepository.findById(request.getCustomerID());
         invoice.setCustomer(customer.get());
         Optional<User> user = userRepository.findById(request.getUserID());
