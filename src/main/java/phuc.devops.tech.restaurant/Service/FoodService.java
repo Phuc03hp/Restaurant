@@ -2,11 +2,8 @@ package phuc.devops.tech.restaurant.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.ls.LSInput;
 import phuc.devops.tech.restaurant.Entity.Category;
 import phuc.devops.tech.restaurant.Entity.Food;
-import phuc.devops.tech.restaurant.ExceptionHandling.AppException;
-import phuc.devops.tech.restaurant.ExceptionHandling.ErrorCode;
 import phuc.devops.tech.restaurant.Repository.CategoryRepository;
 import phuc.devops.tech.restaurant.Repository.FoodRepository;
 import phuc.devops.tech.restaurant.dto.request.UserCreateFood;
@@ -14,7 +11,6 @@ import phuc.devops.tech.restaurant.dto.request.UserUpdateFood;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class FoodService {
@@ -76,7 +72,7 @@ public class FoodService {
     }
 
     public Food getFoodByID(String foodId){
-        return foodRepository.getById(foodId);
+        return foodRepository.findById(foodId).orElseThrow();
     }
 
     public Food getFoodByName (String foodName) {

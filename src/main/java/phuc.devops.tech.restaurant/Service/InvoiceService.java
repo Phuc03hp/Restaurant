@@ -10,7 +10,6 @@ import phuc.devops.tech.restaurant.Repository.CustomerRepository;
 import phuc.devops.tech.restaurant.Repository.InvoiceRepository;
 import phuc.devops.tech.restaurant.Repository.OrderRepository;
 import phuc.devops.tech.restaurant.Repository.UserRepository;
-import phuc.devops.tech.restaurant.dto.request.ReviewStatus;
 import phuc.devops.tech.restaurant.dto.request.UserCreateInvoice;
 import phuc.devops.tech.restaurant.dto.response.InvoiceResponse;
 
@@ -44,7 +43,6 @@ public class InvoiceService {
         if (request.getRating() != null && request.getComment() != null) {
             invoice.setRating(request.getRating());
             invoice.setComment(request.getComment());
-            invoice.setReviewStatus(ReviewStatus.APPROVED);
         }
 
         invoice.setUser(user.get());
@@ -83,34 +81,5 @@ public class InvoiceService {
     public Float getRevenueByYear(int year) {
         return Optional.ofNullable(invoiceRepository.getRevenueByYear(year)).orElse(0f);
     }
-
-    public void approveFeedback(String invoiceID) {
-        Invoice invoice = invoiceRepository.findById(invoiceID)
-                .orElseThrow(() -> new RuntimeException("Invoice not found"));
-
-        if (invoice.getRating() != null && invoice.getComment() != null) {
-            invoice.setReviewStatus(ReviewStatus.APPROVED);
-            invoiceRepository.save(invoice);
-        } else {
-            throw new RuntimeException("No feedback available to approve");
-        }
-    }
-
-    public void rejectFeedback(String invoiceID) {
-        Invoice invoice = invoiceRepository.findById(invoiceID)
-                .orElseThrow(() -> new RuntimeException("Invoice not found"));
-
-        if (invoice.getRating() != null && invoice.getComment() != null) {
-            invoice.setReviewStatus(ReviewStatus.REJECTED);
-            invoiceRepository.save(invoice);
-        } else {
-            throw new RuntimeException("No feedback available to reject");
-        }
-    }
-
-
-
-
-
 
 }

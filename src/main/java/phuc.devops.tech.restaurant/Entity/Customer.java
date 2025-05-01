@@ -17,7 +17,6 @@ public class Customer {
     @Column(name = "phoneNumber", nullable = false, unique = true)
     private String phoneNumber;
 
-
     @Column(name = "name")
     private String name;
 

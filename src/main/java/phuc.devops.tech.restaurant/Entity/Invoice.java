@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-import phuc.devops.tech.restaurant.dto.request.ReviewStatus;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -43,8 +42,6 @@ public class Invoice  implements Serializable {
     @Column(name = "comment")
     private String comment;
 
-    @Enumerated(EnumType.STRING)       // lưu dưới dạng chuỗi ("GOOD", "AVERAGE", ...)
-    @Column(name = "review", nullable = false)
-    private ReviewStatus reviewStatus;
+
 
 }

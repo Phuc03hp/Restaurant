@@ -28,6 +28,8 @@ public class CustomerController {
         return customerService.createCustomer(request);
     }
 
+    // Thiếu fìndByCustomerName
+
     @GetMapping
     public List<Customer> getCustomers(){
         return customerService.getCustomers();
