@@ -75,8 +75,8 @@ public class FoodService {
         return foodRepository.findAll();
     }
 
-    public Food getFoodByID(String foodId){
-        return foodRepository.getById(foodId);
+    public Food getFoodByID(String foodID){
+        return foodRepository.findById(foodID).orElseThrow();
     }
 
     public Food getFoodByName (String foodName) {
