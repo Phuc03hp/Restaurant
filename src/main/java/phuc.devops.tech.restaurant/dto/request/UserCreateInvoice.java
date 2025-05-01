@@ -2,7 +2,6 @@ package phuc.devops.tech.restaurant.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import phuc.devops.tech.restaurant.Entity.Order;
 
 @Data
 @Builder
@@ -11,5 +10,7 @@ import phuc.devops.tech.restaurant.Entity.Order;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreateInvoice {
     String userID;
-    String customerID;
+    String phoneNumber;
+    Integer rating;
+    String comment;
 }

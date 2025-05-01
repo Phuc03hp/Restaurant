@@ -33,16 +33,15 @@ public class CustomerController {
         return customerService.getCustomers();
     }
 
-    @DeleteMapping("/{customerID}")
-    public String deleteCustomer(@PathVariable String customerId){
-        customerRepository.deleteById(customerId);
+    @DeleteMapping("/{phoneNumber}")
+    public String deleteCustomer(@PathVariable String phoneNumber){
+        customerRepository.deleteById(phoneNumber);
         return "Customer has been deleted";
     }
 
-    @PutMapping("/{customerID}")
+    @PutMapping("/{phoneNumber}")
     public Customer updateCustomer(@PathVariable String customerId, @RequestBody UserUpdateCustomer request){
         return customerService.updateCustomer(customerId,request);
     }
-
 
 }

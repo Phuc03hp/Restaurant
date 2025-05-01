@@ -6,15 +6,16 @@ import phuc.devops.tech.restaurant.Entity.Customer;
 import phuc.devops.tech.restaurant.Entity.Invoice;
 import phuc.devops.tech.restaurant.Entity.Order;
 import phuc.devops.tech.restaurant.Entity.User;
-import phuc.devops.tech.restaurant.Repository.*;
-import phuc.devops.tech.restaurant.dto.request.CheckoutRequest;
+import phuc.devops.tech.restaurant.Repository.CustomerRepository;
+import phuc.devops.tech.restaurant.Repository.InvoiceRepository;
+import phuc.devops.tech.restaurant.Repository.OrderRepository;
+import phuc.devops.tech.restaurant.Repository.UserRepository;
+import phuc.devops.tech.restaurant.dto.request.ReviewStatus;
 import phuc.devops.tech.restaurant.dto.request.UserCreateInvoice;
-import phuc.devops.tech.restaurant.dto.response.FoodResponse;
 import phuc.devops.tech.restaurant.dto.response.InvoiceResponse;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,9 +37,16 @@ public class InvoiceService {
         order.setIsPaid(true);
         Invoice invoice = new Invoice();
         invoice.setCreatedAt(LocalDateTime.now());
-        Optional<Customer> customer = customerRepository.findById(request.getCustomerID());
+        
+        Optional<Customer> customer = customerRepository.findByPhoneNumber(request.getPhoneNumber());
         invoice.setCustomer(customer.get());
         Optional<User> user = userRepository.findById(request.getUserID());
+        if (request.getRating() != null && request.getComment() != null) {
+            invoice.setRating(request.getRating());
+            invoice.setComment(request.getComment());
+            invoice.setReviewStatus(ReviewStatus.APPROVED);
+        }
+
         invoice.setUser(user.get());
         invoice.setOrder(order);
         invoiceRepository.save(invoice);
@@ -49,6 +57,7 @@ public class InvoiceService {
         invoiceResponse.setUserName(user.get().getName());
         invoiceResponse.setCustomerName(customer.get().getName());
         invoiceRepository.save(invoice);
+
         return invoiceResponse;
     }
 
@@ -74,5 +83,34 @@ public class InvoiceService {
     public Float getRevenueByYear(int year) {
         return Optional.ofNullable(invoiceRepository.getRevenueByYear(year)).orElse(0f);
     }
+
+    public void approveFeedback(String invoiceID) {
+        Invoice invoice = invoiceRepository.findById(invoiceID)
+                .orElseThrow(() -> new RuntimeException("Invoice not found"));
+
+        if (invoice.getRating() != null && invoice.getComment() != null) {
+            invoice.setReviewStatus(ReviewStatus.APPROVED);
+            invoiceRepository.save(invoice);
+        } else {
+            throw new RuntimeException("No feedback available to approve");
+        }
+    }
+
+    public void rejectFeedback(String invoiceID) {
+        Invoice invoice = invoiceRepository.findById(invoiceID)
+                .orElseThrow(() -> new RuntimeException("Invoice not found"));
+
+        if (invoice.getRating() != null && invoice.getComment() != null) {
+            invoice.setReviewStatus(ReviewStatus.REJECTED);
+            invoiceRepository.save(invoice);
+        } else {
+            throw new RuntimeException("No feedback available to reject");
+        }
+    }
+
+
+
+
+
 
 }

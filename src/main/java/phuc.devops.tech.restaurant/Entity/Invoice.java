@@ -4,10 +4,10 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import phuc.devops.tech.restaurant.dto.request.ReviewStatus;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Data
@@ -17,7 +17,7 @@ public class Invoice  implements Serializable {
 
     @Column(name = "invoiceID")
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID) // này nó có tự sinh kh , cos nhes
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String invoiceID;
 
     @OneToOne
@@ -25,7 +25,7 @@ public class Invoice  implements Serializable {
     private Order order;
 
     @ManyToOne
-    @JoinColumn(name = "customerID", nullable = false)
+    @JoinColumn(name = "customer_phone", referencedColumnName = "phoneNumber")
     private Customer customer;
 
     @ManyToOne
@@ -36,5 +36,15 @@ public class Invoice  implements Serializable {
     @Column(name = "created_at", nullable = false, updatable = false,
             columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
+
+    @Column(name = "rating")
+    private Integer rating;
+
+    @Column(name = "comment")
+    private String comment;
+
+    @Enumerated(EnumType.STRING)       // lưu dưới dạng chuỗi ("GOOD", "AVERAGE", ...)
+    @Column(name = "review", nullable = false)
+    private ReviewStatus reviewStatus;
 
 }

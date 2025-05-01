@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -12,22 +13,16 @@ import java.util.List;
 @Table(name = "Customer")
 public class Customer {
 
-    @Column(name = "customerID")
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String customerID;
+    @Column(name = "phoneNumber", nullable = false, unique = true)
+    private String phoneNumber;
+
 
     @Column(name = "name")
     private String name;
 
-    @Column(name = "phoneNumber")
-    private String phoneNumber;
-
-    @Column(name = "email")
-    private String email;
-
-    @Column(name = "address")
-    private String address;
+    @Column(name = "totalSpent", nullable = false)
+    private BigDecimal totalSpent = BigDecimal.ZERO;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Invoice> invoices;

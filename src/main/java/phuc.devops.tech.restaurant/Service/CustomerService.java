@@ -22,9 +22,7 @@ public class CustomerService {
 
     public Customer createCustomer(UserCreateCustomer request){
         Customer customer = new Customer();
-        customer.setAddress(request.getAddress());
         customer.setName(request.getName());
-        customer.setEmail(request.getEmail());
         customer.setPhoneNumber(request.getPhoneNumber());
 
         return customerRepository.save(customer);
@@ -33,9 +31,7 @@ public class CustomerService {
     public Customer updateCustomer(String customerID,UserUpdateCustomer request){
         Customer customer = customerRepository.findById(customerID)
                 .orElseThrow(()->new RuntimeException("Customer not found"));;
-        customer.setAddress(request.getAddress());
         customer.setName(request.getName());
-        customer.setEmail(request.getEmail());
         customer.setPhoneNumber(request.getPhoneNumber());
 
         return customerRepository.save(customer);
