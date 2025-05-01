@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -21,7 +20,7 @@ public class Customer {
     private String name;
 
     @Column(name = "totalSpent", nullable = false)
-    private BigDecimal totalSpent = BigDecimal.ZERO;
+    private Float totalSpent = 0.0f;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Invoice> invoices;
