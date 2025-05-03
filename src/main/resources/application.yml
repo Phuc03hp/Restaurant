@@ -16,3 +16,11 @@ spring:
     properties:
       # Hibernate sẽ gửi/nhận timestamp theo múi Asia/Ho_Chi_Minh
       hibernate.jdbc.time_zone: Asia/Ho_Chi_Minh
+
+vnpay:
+  payUrl:  https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+  returnUrl: http://localhost:8081/restaurant/payment/return
+  tmnCode: "HYM5GGO9"
+  secretKey: "CLZC67CFRPD7LNUT1M57GC0HHY7WOG0W"
+  apiUrl:    https://sandbox.vnpayment.vn/merchant_webapi/api/transaction
+
