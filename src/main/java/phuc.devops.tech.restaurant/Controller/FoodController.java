@@ -1,6 +1,8 @@
 package phuc.devops.tech.restaurant.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import phuc.devops.tech.restaurant.Entity.Food;
 import phuc.devops.tech.restaurant.Service.FoodService;
@@ -26,10 +28,9 @@ public class FoodController {
     }
 
     @GetMapping
-    List<Food> getFood(){
+    public List<Food> getFood() {
         return foodService.getFood();
     }
-
     @GetMapping("/{name}")
     Food getFoodByName(@PathVariable String name) {return foodService.getFoodByName(name);}
 
