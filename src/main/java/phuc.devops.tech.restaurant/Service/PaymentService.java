@@ -1,6 +1,8 @@
 package phuc.devops.tech.restaurant.Service;
 
 import phuc.devops.tech.restaurant.Config.PaymentConfig;
+import phuc.devops.tech.restaurant.Entity.Payment;
+import phuc.devops.tech.restaurant.Repository.PaymentRespository;
 import phuc.devops.tech.restaurant.dto.request.PaymentCreate;
 import phuc.devops.tech.restaurant.dto.request.PaymentRefund;
 import phuc.devops.tech.restaurant.dto.response.PaymentVnpayResponse;
@@ -14,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -23,6 +26,7 @@ public class PaymentService {
 
     PaymentConfig config;
     RestTemplate restTemplate = new RestTemplate();
+    PaymentRespository paymentRespository;
 
     public PaymentVnpayResponse createPayment(PaymentCreate req, String clientIp) {
         Map<String,String> params = new HashMap<>();
@@ -139,4 +143,29 @@ public class PaymentService {
         String computedHash = PaymentConfig.hmacSHA512(config.getSecretKey(), data);
         return computedHash.equals(receivedHash);
     }
+
+    public boolean handleCallback(Map<String, String> params) {
+        String receivedHash = params.get("vnp_SecureHash");
+        String computedHash = PaymentConfig.hashAllFields(params, config.getSecretKey());
+
+        boolean valid = receivedHash != null && receivedHash.equalsIgnoreCase(computedHash);
+        boolean success = valid && "00".equals(params.get("vnp_ResponseCode"));
+
+        Payment payment = new Payment();
+        payment.setTxnRef(params.get("vnp_TxnRef"));
+        payment.setAmount(Long.parseLong(params.get("vnp_Amount")) / 100);
+        payment.setBankCode(params.get("vnp_BankCode"));
+        payment.setBankTranNo(params.get("vnp_BankTranNo"));
+        payment.setCardType(params.get("vnp_CardType"));
+        payment.setOrderInfo(params.get("vnp_OrderInfo"));
+        payment.setPayDate(params.get("vnp_PayDate"));
+        payment.setResponseCode(params.get("vnp_ResponseCode"));
+        payment.setTransactionNo(params.get("vnp_TransactionNo"));
+        payment.setTransactionStatus(params.get("vnp_TransactionStatus"));
+        payment.setSuccess(success);
+
+        paymentRespository.save(payment);
+        return success;
+    }
+
 }

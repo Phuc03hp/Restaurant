@@ -53,7 +53,7 @@ public class PaymentController {
 
     @GetMapping("/return")
     public ResponseEntity<String> onReturn(@RequestParam Map<String, String> params) {
-        boolean valid = paymentService.validateResponse(params);
+        boolean valid = paymentService.handleCallback(params);
 
         String redirectUrl = "http://localhost:8081/restaurant/auth/signup/user/";
         String message;
