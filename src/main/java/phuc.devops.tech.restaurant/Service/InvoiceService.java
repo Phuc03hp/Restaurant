@@ -10,6 +10,7 @@ import phuc.devops.tech.restaurant.Repository.CustomerRepository;
 import phuc.devops.tech.restaurant.Repository.InvoiceRepository;
 import phuc.devops.tech.restaurant.Repository.OrderRepository;
 import phuc.devops.tech.restaurant.Repository.UserRepository;
+import phuc.devops.tech.restaurant.dto.request.TableStatus;
 import phuc.devops.tech.restaurant.dto.request.UserCreateInvoice;
 import phuc.devops.tech.restaurant.dto.response.InvoiceResponse;
 
@@ -60,6 +61,8 @@ public class InvoiceService {
         float originalTotal = order.getTotal();
         float discountedTotal = originalTotal * (1 - discount);
         order.setTotal(discountedTotal);
+        order.setIsPaid(true);
+        order.getDiningTable().setTableStatus(TableStatus.AVAILABLE);
 
         // Cập nhật tổng chi tiêu
         customer.setTotalSpent(totalSpent + discountedTotal);
