@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import phuc.devops.tech.restaurant.Entity.DiningTable;
 import phuc.devops.tech.restaurant.Service.DiningTableService;
 import phuc.devops.tech.restaurant.dto.request.UserCreateTable;
+import phuc.devops.tech.restaurant.dto.request.UserUpdateTable;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class DiningTableController {
     }
 
     @PutMapping("/updateTable/{tableID}")
-    public String updateTable(@PathVariable Long tableID, @RequestBody UserCreateTable request) {
+    public String updateTable(@PathVariable Long tableID, @RequestBody UserUpdateTable request) {
         diningTableService.updateTable(tableID,request);
         return "This table has been updated";
     }

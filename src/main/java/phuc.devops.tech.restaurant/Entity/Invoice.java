@@ -42,7 +42,17 @@ public class Invoice  implements Serializable {
     @Column(name = "comment")
     private String comment;
 
-    @OneToOne
-    @JoinColumn(name = "payment_id", referencedColumnName = "txn_ref")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "invoice_payment",
+            joinColumns = @JoinColumn(
+                    name = "invoice_id",             // FK về invoice.invoiceID
+                    referencedColumnName = "invoiceID"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "payment_id",             // FK về payment.txn_ref
+                    referencedColumnName = "txn_ref"
+            )
+    )
     private Payment payment;
 }

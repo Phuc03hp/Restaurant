@@ -9,6 +9,7 @@ import phuc.devops.tech.restaurant.Entity.DiningTable;
 import phuc.devops.tech.restaurant.Repository.DiningTableRepository;
 import phuc.devops.tech.restaurant.dto.request.TableStatus;
 import phuc.devops.tech.restaurant.dto.request.UserCreateTable;
+import phuc.devops.tech.restaurant.dto.request.UserUpdateTable;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,10 +29,11 @@ public class DiningTableService {
     public DiningTable createTable(UserCreateTable request){
         DiningTable diningTable = new DiningTable();
         diningTable.setMaxCapacity(request.getMaxCapacity());
+        diningTable.setTableStatus(TableStatus.AVAILABLE);
         return  diningTableRepository.save(diningTable);
     }
 
-    public DiningTable updateTable(Long tableID, UserCreateTable request) {
+    public DiningTable updateTable(Long tableID, UserUpdateTable request) {
         Optional<DiningTable> optionalDiningTable = diningTableRepository.findById(tableID);
         if (optionalDiningTable.isEmpty()) {
             throw new RuntimeException("Table with ID " + tableID + " not found.");
@@ -39,6 +41,7 @@ public class DiningTableService {
 
         DiningTable diningTable = optionalDiningTable.get();
         diningTable.setMaxCapacity(request.getMaxCapacity());
+        diningTable.setTableStatus(TableStatus.AVAILABLE);
 
         // Nếu request có thêm tableStatus, có thể update luôn
         if (request.getTableStatus() != null) {
