@@ -25,7 +25,7 @@ public class PaymentController {
     PaymentService paymentService;
 
     @PostMapping("/create")
-    public ResponseEntity<PaymentVnpayResponse> createPayment(
+    public ResponseEntity<PaymentVnpayRe    sponse> createPayment(
             @RequestBody PaymentCreate req,
             @RequestHeader(value = "X-Forwarded-For", required = false) String xff,
             @RequestHeader(value = "X-Real-IP", required = false) String realIp
