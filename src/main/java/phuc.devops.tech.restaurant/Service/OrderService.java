@@ -1,7 +1,7 @@
 package phuc.devops.tech.restaurant.Service;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import phuc.devops.tech.restaurant.Entity.DiningTable;
@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.hibernate.Hibernate;
 
 
 @Service
@@ -33,6 +32,7 @@ public class OrderService {
 
     @Autowired
     private FoodRepository foodRepository;
+
 
     @Transactional
     public Order getOrCreateOrderForTable(Long tableID) {

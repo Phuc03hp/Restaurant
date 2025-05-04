@@ -26,8 +26,13 @@ public class PaymentController {
 
     //tạo yêu cầu thanh toán và gửi đến VNPay
     @PostMapping("/create")
+<<<<<<< HEAD
+    public ResponseEntity<PaymentVnpayResponse> createPayment(
+            @RequestBody PaymentCreate req,
+=======
     public ResponseEntity<PaymentVnpayResponse> createPayment(
             @RequestBody PaymentCreate req,             // nhận object từ request body (JSON) { "amount": 100000, "bankCode": "NCB", "language": "vn" }
+>>>>>>> 77fe0967dd3fbe0c295b04c4294557d3f47a4ee7
             @RequestHeader(value = "X-Forwarded-For", required = false) String xff,
             @RequestHeader(value = "X-Real-IP", required = false) String realIp
     ) {

@@ -16,6 +16,7 @@ spring:
     properties:
       # Hibernate sẽ gửi/nhận timestamp theo múi Asia/Ho_Chi_Minh
       hibernate.jdbc.time_zone: Asia/Ho_Chi_Minh
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html

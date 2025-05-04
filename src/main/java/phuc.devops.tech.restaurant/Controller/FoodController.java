@@ -8,8 +8,7 @@ import phuc.devops.tech.restaurant.Entity.Food;
 import phuc.devops.tech.restaurant.Service.FoodService;
 import phuc.devops.tech.restaurant.dto.request.UserCreateFood;
 import phuc.devops.tech.restaurant.dto.request.UserUpdateFood;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 import java.util.List;
 
 @RestController
@@ -29,8 +28,9 @@ public class FoodController {
     }
 
     @GetMapping
+
     public List<Food> getFood() {
-        return foodService.getFood();
+
     }
     @GetMapping("/{name}")
     public Food getFoodByName(@PathVariable String name) {return foodService.getFoodByName(name);}

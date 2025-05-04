@@ -25,5 +25,11 @@ public class Category {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Food> foods;
 
+    @Column(name = "rating")
+    private int rating;
+
+    @Column(name = "comment")
+    private String comment;
+
 
 }
