@@ -28,16 +28,6 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @PostMapping("/createTable")
-    public DiningTable createTable(@RequestBody UserCreateTable request){
-        return diningTableService.createTable(request);
-    }
-
-    @GetMapping("/tables")
-    public List<DiningTable> getTables() {
-        return diningTableService.getTable();
-    }
-
     @GetMapping("/table/{tableID}")
     public ResponseEntity<Order> getOrderForTable(@PathVariable Long tableID) {
         try {
