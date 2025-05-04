@@ -12,7 +12,7 @@ import lombok.AccessLevel;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
+import org.springframework.jdbc.core.JdbcTemplate;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -27,7 +27,9 @@ public class PaymentService {
     PaymentConfig config;
     RestTemplate restTemplate = new RestTemplate();
     PaymentRespository paymentRespository;
+    JdbcTemplate jdbcTemplate;
 
+    // tạo url thanh toán VNpay để client get request
     public PaymentVnpayResponse createPayment(PaymentCreate req, String clientIp) {
         Map<String,String> params = new HashMap<>();
         params.put("vnp_Version", "2.1.0");
@@ -37,9 +39,16 @@ public class PaymentService {
         params.put("vnp_CurrCode", "VND");
         if (req.getBankCode() != null) params.put("vnp_BankCode", req.getBankCode());
 
-        String txnRef = PaymentConfig.getRandomNumber(8);
+        String txnRef = PaymentConfig.getRandomNumber(8);    // mã giao dịch random
         params.put("vnp_TxnRef", txnRef);
-        params.put("vnp_OrderInfo", "Thanh toan don hang: " + txnRef);
+       // params.put("vnp_OrderInfo", "Thanh toan don hang: " + txnRef);
+        params.put("vnp_OrderInfo", "Thanh toan don hang: " + req.getInvoiceId());  // thanh toan đơn hàng + mã đơn
+
+        // chèn invoiceid và paymentid cùng 1 lúc vào bang quan hệ (txn_ref = payment_id)
+        String sql = "INSERT INTO invoice_payment (invoice_id, payment_id) VALUES (?, ?)";
+        jdbcTemplate.update(sql, req.getInvoiceId(), txnRef);
+
+
         params.put("vnp_OrderType", "other");
         params.put("vnp_Locale", Optional.ofNullable(req.getLanguage()).filter(s->!s.isEmpty()).orElse("vn"));
         params.put("vnp_ReturnUrl", config.getReturnUrl());
@@ -68,6 +77,7 @@ public class PaymentService {
         String secureHash = PaymentConfig.hmacSHA512(config.getSecretKey(), hashData);
         query.append("&vnp_SecureHash=").append(secureHash);
 
+        // trả về URL thanh toán
         String paymentUrl = config.getPayUrl() + "?" + query;
         PaymentVnpayResponse resp = new PaymentVnpayResponse();
         resp.setCode("00");
@@ -76,6 +86,7 @@ public class PaymentService {
         return resp;
     }
 
+    /*
     public String refund(PaymentRefund req, String clientIp) {
         Map<String,Object> body = new HashMap<>();
         String requestId = PaymentConfig.getRandomNumber(8);
@@ -120,7 +131,9 @@ public class PaymentService {
                 .postForEntity(config.getApiUrl(), entity, String.class);
         return response.getBody();
     }
+*/
 
+    // xác thực tính hợp lệ của response từ VNPAY server
     public boolean validateResponse(Map<String,String> params) {
         String receivedHash = params.remove("vnp_SecureHash");
         params.remove("vnp_SecureHashType");
@@ -144,12 +157,14 @@ public class PaymentService {
         return computedHash.equals(receivedHash);
     }
 
+
+    // xử lý callback từ VNPAY sau khi ngưới dùng thanhg toán
     public boolean handleCallback(Map<String, String> params) {
         String receivedHash = params.get("vnp_SecureHash");
         String computedHash = PaymentConfig.hashAllFields(params, config.getSecretKey());
 
         boolean valid = receivedHash != null && receivedHash.equalsIgnoreCase(computedHash);
-        boolean success = valid && "00".equals(params.get("vnp_ResponseCode"));
+        boolean success = "00".equals(params.get("vnp_ResponseCode"));
 
         Payment payment = new Payment();
         payment.setTxnRef(params.get("vnp_TxnRef"));
