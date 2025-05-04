@@ -10,7 +10,6 @@ import phuc.devops.tech.restaurant.Entity.Order;
 import phuc.devops.tech.restaurant.Repository.DiningTableRepository;
 import phuc.devops.tech.restaurant.Repository.FoodRepository;
 import phuc.devops.tech.restaurant.Repository.OrderRepository;
-import phuc.devops.tech.restaurant.dto.request.TableStatus;
 import phuc.devops.tech.restaurant.dto.request.UserCreateOrder;
 import phuc.devops.tech.restaurant.dto.response.FoodResponse;
 import phuc.devops.tech.restaurant.dto.response.OrderResponse;
@@ -56,7 +55,6 @@ public class OrderService {
         Order newOrder = new Order();
         newOrder.setDiningTable(diningTable);
         newOrder.setIsPaid(false); // Đánh dấu là chưa thanh toán
-        newOrder.getDiningTable().setTableStatus(TableStatus.UNAVAILABLE);
         return orderRepository.save(newOrder);
     }
 

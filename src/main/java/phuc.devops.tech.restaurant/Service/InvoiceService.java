@@ -81,9 +81,6 @@ public class InvoiceService {
         }
         invoiceRepository.save(invoice);
 
-        // 6. Cập nhật trạng thái bàn về AVAILABLE thông qua DiningTableService
-        Long tableID = order.getDiningTable().getTableID();
-        diningTableService.setTableAvailable(tableID);
 
         // 7. Chuẩn bị và trả về response
         InvoiceResponse invoiceResponse = new InvoiceResponse();
