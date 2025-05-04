@@ -49,5 +49,8 @@ public class Payment {
     @Column(name = "success")
     private Boolean success;
 
+    @OneToOne
+    @JoinColumn(name = "invoice_id", referencedColumnName = "invoiceID")
+    private Invoice invoice;
 
 }

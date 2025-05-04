@@ -9,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PaymentCreate {
-    private long amount;
     private String invoiceId;
     private String bankCode;
     private String language;
