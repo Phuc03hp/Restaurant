@@ -44,6 +44,11 @@ public class PaymentService {
        // params.put("vnp_OrderInfo", "Thanh toan don hang: " + txnRef);
         params.put("vnp_OrderInfo", "Thanh toan don hang: " + req.getInvoiceId());  // thanh toan đơn hàng + mã đơn
 
+
+        // chen truoc payment_id = txn_ref vao payment table để tránh lỗi xung đột khóa ngoại từ bảng quan hệ
+        String temp = "INSERT INTO payment (txn_ref) VALUES (?)";
+        jdbcTemplate.update(temp, txnRef);
+
         // chèn invoiceid và paymentid cùng 1 lúc vào bang quan hệ (txn_ref = payment_id)
         String sql = "INSERT INTO invoice_payment (invoice_id, payment_id) VALUES (?, ?)";
         jdbcTemplate.update(sql, req.getInvoiceId(), txnRef);
