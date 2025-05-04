@@ -42,6 +42,7 @@ public class Invoice  implements Serializable {
     @Column(name = "comment")
     private String comment;
 
-
-
+    @OneToOne
+    @JoinColumn(name = "payment_id", referencedColumnName = "txn_ref")
+    private Payment payment;
 }

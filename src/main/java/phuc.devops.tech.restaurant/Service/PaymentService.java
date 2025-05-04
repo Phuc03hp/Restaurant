@@ -28,6 +28,7 @@ public class PaymentService {
     RestTemplate restTemplate = new RestTemplate();
     PaymentRespository paymentRespository;
     JdbcTemplate jdbcTemplate;
+    InvoiceService invoiceService;
 
     // tạo url thanh toán VNpay để client get request
     public PaymentVnpayResponse createPayment(PaymentCreate req, String clientIp) {
@@ -35,7 +36,9 @@ public class PaymentService {
         params.put("vnp_Version", "2.1.0");
         params.put("vnp_Command", "pay");
         params.put("vnp_TmnCode", config.getTmnCode());
-        params.put("vnp_Amount", String.valueOf(req.getAmount() * 100));
+
+        Float  amounttotal = invoiceService.getInvoiceTotal(req.getInvoiceId());
+        params.put("vnp_Amount", String.valueOf((long)(amounttotal * 100)));
         params.put("vnp_CurrCode", "VND");
         if (req.getBankCode() != null) params.put("vnp_BankCode", req.getBankCode());
 
