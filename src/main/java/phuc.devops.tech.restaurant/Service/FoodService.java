@@ -67,10 +67,9 @@ public class FoodService {
         return foodRepository.save(food);
     }
 
-    public List<Food> getFood(){
+    public List<Food> getFood() {
         return foodRepository.findAll();
     }
-
     public Food getFoodByID(String foodId){
         return foodRepository.findById(foodId).orElseThrow();
     }

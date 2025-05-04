@@ -1,5 +1,6 @@
 package phuc.devops.tech.restaurant.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class Customer {
     @Column(name = "totalSpent", nullable = false)
     private Float totalSpent = 0.0f;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Invoice> invoices;
 }
