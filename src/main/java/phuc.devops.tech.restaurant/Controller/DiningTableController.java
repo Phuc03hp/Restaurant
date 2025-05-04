@@ -39,14 +39,12 @@ public class DiningTableController {
     }
 
     @PostMapping("/available/{tableID}")
-    public String setTableAvailable(@PathVariable Long tableID){
+    public void setTableAvailable(@PathVariable Long tableID){
         diningTableService.setTableAvailable(tableID);
-        return "Done";
     }
 
     @PostMapping("/unavailable/{tableID}")
-    public String setTableUnavailable(@PathVariable Long tableID){
+    public void setTableUnavailable(@PathVariable Long tableID){
         diningTableService.setTableUnavailable(tableID);
-        return "Done";
     }
 }
