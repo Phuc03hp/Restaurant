@@ -108,6 +108,7 @@ public class OrderService {
     public void payOrder(Long tableID) {
         Order order = getCurrentOrderForTable(tableID);
         order.setIsPaid(true);
+        order.getDiningTable().setTableStatus(TableStatus.AVAILABLE);
         orderRepository.save(order);
     }
 

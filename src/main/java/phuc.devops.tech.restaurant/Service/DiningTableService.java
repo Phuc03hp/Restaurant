@@ -12,7 +12,6 @@ import phuc.devops.tech.restaurant.dto.request.UserCreateTable;
 import phuc.devops.tech.restaurant.dto.request.UserUpdateTable;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,21 +33,23 @@ public class DiningTableService {
     }
 
     public DiningTable updateTable(Long tableID, UserUpdateTable request) {
-        Optional<DiningTable> optionalDiningTable = diningTableRepository.findById(tableID);
-        if (optionalDiningTable.isEmpty()) {
-            throw new RuntimeException("Table with ID " + tableID + " not found.");
-        }
-
-        DiningTable diningTable = optionalDiningTable.get();
+        DiningTable diningTable = diningTableRepository.findById(tableID).orElseThrow();
         diningTable.setMaxCapacity(request.getMaxCapacity());
         diningTable.setTableStatus(TableStatus.AVAILABLE);
 
         // Nếu request có thêm tableStatus, có thể update luôn
-        if (request.getTableStatus() != null) {
-            diningTable.setTableStatus(request.getTableStatus());
-        }
+//        if (request.getTableStatus() != null) {
+//            diningTable.setTableStatus(request.getTableStatus());
+//        }
 
         return diningTableRepository.save(diningTable);
+    }
+
+    public void setTableAvailable(Long tableID) {
+        DiningTable diningTable = diningTableRepository.findById(tableID).orElseThrow();
+        diningTable.setTableStatus(TableStatus.AVAILABLE);
+
+        diningTableRepository.save(diningTable);
     }
 
     public void deleteTable(Long tableID) {

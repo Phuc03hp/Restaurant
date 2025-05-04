@@ -2,6 +2,7 @@ package phuc.devops.tech.restaurant.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import phuc.devops.tech.restaurant.Entity.*;
 import phuc.devops.tech.restaurant.Repository.*;
 import phuc.devops.tech.restaurant.dto.request.TableStatus;
@@ -29,11 +30,15 @@ public class InvoiceService {
     @Autowired
     private DiningTableRepository diningTableRepository;
 
+    @Autowired
+    private DiningTableService diningTableService;
+
     public Float getInvoiceTotal(String invoiceID){
         Invoice invoice = invoiceRepository.findById(invoiceID).orElseThrow();
         return invoice.getOrder().getTotal();
     }
 
+    @Transactional
     public InvoiceResponse getInvoice(String orderID, UserCreateInvoice request) {
         Order order = orderRepository.findById(orderID)
                 .orElseThrow(() -> new RuntimeException("OrderID cannot be found"));
@@ -64,10 +69,9 @@ public class InvoiceService {
         float discountedTotal = originalTotal * (1 - discount);
         order.setTotal(discountedTotal);
         order.setIsPaid(true);
-        Long tableID = order.getDiningTable().getTableID();
-        DiningTable diningTableNow =diningTableRepository.findById(tableID).orElseThrow();
-        diningTableNow.setTableStatus(TableStatus.AVAILABLE);
-        diningTableRepository.save(diningTableNow);
+
+        Long tableID=order.getDiningTable().getTableID();
+        diningTableService.setTableAvailable(tableID);
 
         // Cập nhật tổng chi tiêu
         customer.setTotalSpent(totalSpent + discountedTotal);
@@ -90,6 +94,7 @@ public class InvoiceService {
             invoice.setRating(request.getRating());
             invoice.setComment(request.getComment());
         }
+        invoice.getOrder().getDiningTable().setTableStatus(TableStatus.AVAILABLE);
 
         invoiceRepository.save(invoice);
 

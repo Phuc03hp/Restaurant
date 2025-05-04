@@ -10,5 +10,5 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateTable {
     private Long maxCapacity;
-    private TableStatus tableStatus ;
+   // private TableStatus tableStatus ;
 }
