@@ -6,7 +6,8 @@ import phuc.devops.tech.restaurant.Entity.Food;
 import phuc.devops.tech.restaurant.Service.FoodService;
 import phuc.devops.tech.restaurant.dto.request.UserCreateFood;
 import phuc.devops.tech.restaurant.dto.request.UserUpdateFood;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 @RestController
@@ -16,30 +17,30 @@ public class FoodController {
     private FoodService foodService;
 
     @PostMapping
-    Food createFood(@RequestBody UserCreateFood request){
+    public Food createFood(@RequestBody UserCreateFood request){
         return foodService.createFood(request);
     }
 
     @PutMapping("/{foodID}")
-    Food updateFood(@PathVariable String foodID , @RequestBody UserUpdateFood request ){
+    public Food updateFood(@PathVariable String foodID , @RequestBody UserUpdateFood request ){
         return foodService.updateFood(foodID,request);
     }
 
     @GetMapping
-    List<Food> getFood(){
+    public List<Food> getFood(){
         return foodService.getFood();
     }
 
     @GetMapping("/{name}")
-    Food getFoodByName(@PathVariable String name) {return foodService.getFoodByName(name);}
+    public Food getFoodByName(@PathVariable String name) {return foodService.getFoodByName(name);}
 
     @GetMapping("/id/{foodID}")
-    Food getFoodById(@PathVariable String foodID){
+    public Food getFoodById(@PathVariable String foodID){
         return foodService.getFoodByID(foodID);
     }
 
     @DeleteMapping("/{foodID}")
-    String deleteFoodById(@PathVariable String foodID){
+    public String deleteFoodById(@PathVariable String foodID){
         foodService.deleteFood(foodID);
         return "This food has benn deleted";
     }
