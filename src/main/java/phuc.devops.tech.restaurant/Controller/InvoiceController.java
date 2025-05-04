@@ -7,14 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import phuc.devops.tech.restaurant.Entity.Order;
-import phuc.devops.tech.restaurant.Entity.User;
+import phuc.devops.tech.restaurant.Service.DiningTableService;
 import phuc.devops.tech.restaurant.Service.InvoiceService;
 import phuc.devops.tech.restaurant.Service.OrderService;
 import phuc.devops.tech.restaurant.dto.request.UserCreateInvoice;
 import phuc.devops.tech.restaurant.dto.response.InvoiceResponse;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/checkout")
@@ -24,11 +23,12 @@ public class InvoiceController {
     @Autowired
     InvoiceService invoiceService;
     OrderService orderService;
+    DiningTableService diningTableService;
 
     @PostMapping("/{tableID}")
     public InvoiceResponse payment(@PathVariable Long tableID, @RequestBody UserCreateInvoice request){
         Order order = orderService.getCurrentOrderForTable(tableID);
-        order.setIsPaid(true);
+        diningTableService.setTableAvailable(tableID);
         return invoiceService.getInvoice(order.getOrderID(),request);
     }
 

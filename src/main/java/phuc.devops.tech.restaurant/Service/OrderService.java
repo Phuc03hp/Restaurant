@@ -52,7 +52,6 @@ public class OrderService {
         if (!orders.isEmpty()) {
             return orders.get(0); // Trả về đơn hàng đầu tiên chưa thanh toán
         }
-
         // Nếu không có đơn hàng chưa thanh toán, tạo mới một đơn hàng
         Order newOrder = new Order();
         newOrder.setDiningTable(diningTable);
@@ -108,7 +107,6 @@ public class OrderService {
     public void payOrder(Long tableID) {
         Order order = getCurrentOrderForTable(tableID);
         order.setIsPaid(true);
-        order.getDiningTable().setTableStatus(TableStatus.AVAILABLE);
         orderRepository.save(order);
     }
 

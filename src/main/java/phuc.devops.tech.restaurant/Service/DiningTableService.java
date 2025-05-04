@@ -52,6 +52,14 @@ public class DiningTableService {
         diningTableRepository.save(diningTable);
     }
 
+    public void setTableUnavailable(Long tableID) {
+        DiningTable diningTable = diningTableRepository.findById(tableID).orElseThrow();
+        diningTable.setTableStatus(TableStatus.UNAVAILABLE);
+
+        diningTableRepository.save(diningTable);
+    }
+
+
     public void deleteTable(Long tableID) {
         if (!diningTableRepository.existsById(tableID)) {
             throw new RuntimeException("Table with ID " + tableID + " not found.");

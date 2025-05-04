@@ -38,4 +38,15 @@ public class DiningTableController {
         return "This table has been deleted";
     }
 
+    @PostMapping("/available/{tableID}")
+    public String setTableAvailable(@PathVariable Long tableID){
+        diningTableService.setTableAvailable(tableID);
+        return "Done";
+    }
+
+    @PostMapping("/unavailable/{tableID}")
+    public String setTableUnavailable(@PathVariable Long tableID){
+        diningTableService.setTableUnavailable(tableID);
+        return "Done";
+    }
 }

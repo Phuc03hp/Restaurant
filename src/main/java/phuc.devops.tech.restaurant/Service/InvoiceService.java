@@ -3,9 +3,14 @@ package phuc.devops.tech.restaurant.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import phuc.devops.tech.restaurant.Entity.*;
-import phuc.devops.tech.restaurant.Repository.*;
-import phuc.devops.tech.restaurant.dto.request.TableStatus;
+import phuc.devops.tech.restaurant.Entity.Customer;
+import phuc.devops.tech.restaurant.Entity.Invoice;
+import phuc.devops.tech.restaurant.Entity.Order;
+import phuc.devops.tech.restaurant.Entity.User;
+import phuc.devops.tech.restaurant.Repository.CustomerRepository;
+import phuc.devops.tech.restaurant.Repository.InvoiceRepository;
+import phuc.devops.tech.restaurant.Repository.OrderRepository;
+import phuc.devops.tech.restaurant.Repository.UserRepository;
 import phuc.devops.tech.restaurant.dto.request.UserCreateInvoice;
 import phuc.devops.tech.restaurant.dto.response.InvoiceResponse;
 
@@ -15,6 +20,7 @@ import java.util.Optional;
 
 @Service
 public class InvoiceService {
+
     @Autowired
     private InvoiceRepository invoiceRepository;
 
@@ -28,85 +34,73 @@ public class InvoiceService {
     private OrderRepository orderRepository;
 
     @Autowired
-    private DiningTableRepository diningTableRepository;
-
-    @Autowired
     private DiningTableService diningTableService;
 
-    public Float getInvoiceTotal(String invoiceID){
+    public Float getInvoiceTotal(String invoiceID) {
         Invoice invoice = invoiceRepository.findById(invoiceID).orElseThrow();
         return invoice.getOrder().getTotal();
     }
 
     @Transactional
     public InvoiceResponse getInvoice(String orderID, UserCreateInvoice request) {
+        // 1. Lấy Order và đánh dấu đã thanh toán
         Order order = orderRepository.findById(orderID)
                 .orElseThrow(() -> new RuntimeException("OrderID cannot be found"));
         order.setIsPaid(true);
 
-        // Lấy thông tin khách hàng theo số điện thoại
-        Optional<Customer> customerOpt = customerRepository.findByPhoneNumber(request.getPhoneNumber());
-        if (customerOpt.isEmpty()) {
-            throw new RuntimeException("Customer not found with phone number: " + request.getPhoneNumber());
-        }
-        Customer customer = customerOpt.get();
-
-        // Tính giảm giá theo tổng chi tiêu
-        float totalSpent = customer.getTotalSpent() == null ? 0f : customer.getTotalSpent();
-        float discount = 0f;
-
-        if (totalSpent >= 15000000) {
-            discount = 0.20f;
-        } else if (totalSpent >= 7000000) {
-            discount = 0.15f;
-        } else if (totalSpent >= 3000000) {
-            discount = 0.10f;
-        } else if (totalSpent >= 500000) {
-            discount = 0.05f;
-        }
-
+        // 2. Tính giảm giá dựa trên lịch sử khách hàng
+        Customer customer = customerRepository.findByPhoneNumber(request.getPhoneNumber())
+                .orElseThrow(() -> new RuntimeException(
+                        "Customer not found with phone number: " + request.getPhoneNumber()));
+        float totalSpent = Optional.ofNullable(customer.getTotalSpent()).orElse(0f);
+        float discount = calculateDiscount(totalSpent);
         float originalTotal = order.getTotal();
         float discountedTotal = originalTotal * (1 - discount);
         order.setTotal(discountedTotal);
-        order.setIsPaid(true);
 
-        Long tableID=order.getDiningTable().getTableID();
-        diningTableService.setTableAvailable(tableID);
-
-        // Cập nhật tổng chi tiêu
+        // 3. Cập nhật tổng chi tiêu của khách
         customer.setTotalSpent(totalSpent + discountedTotal);
         customerRepository.save(customer);
 
-        // Tạo hóa đơn
+        // 4. Lưu Order để cập nhật trạng thái và tổng giá
+        orderRepository.save(order);
+
+        // 5. Tạo và lưu Invoice
         Invoice invoice = new Invoice();
         invoice.setCreatedAt(LocalDateTime.now());
         invoice.setCustomer(customer);
 
-        Optional<User> user = userRepository.findById(request.getUserID());
-        if (user.isEmpty()) {
-            throw new RuntimeException("User not found with ID: " + request.getUserID());
-        }
-
-        invoice.setUser(user.get());
+        User user = userRepository.findById(request.getUserID())
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + request.getUserID()));
+        invoice.setUser(user);
         invoice.setOrder(order);
 
         if (request.getRating() != null && request.getComment() != null) {
             invoice.setRating(request.getRating());
             invoice.setComment(request.getComment());
         }
-        invoice.getOrder().getDiningTable().setTableStatus(TableStatus.AVAILABLE);
-
         invoiceRepository.save(invoice);
 
-        // Trả về kết quả
+        // 6. Cập nhật trạng thái bàn về AVAILABLE thông qua DiningTableService
+        Long tableID = order.getDiningTable().getTableID();
+        diningTableService.setTableAvailable(tableID);
+
+        // 7. Chuẩn bị và trả về response
         InvoiceResponse invoiceResponse = new InvoiceResponse();
         invoiceResponse.setInvoiceID(invoice.getInvoiceID());
         invoiceResponse.setOrder(order);
         invoiceResponse.setUserID(request.getUserID());
-        invoiceResponse.setUserName(user.get().getName());
+        invoiceResponse.setUserName(user.getName());
         invoiceResponse.setCustomerName(customer.getName());
-
         return invoiceResponse;
+    }
+
+    private float calculateDiscount(float totalSpent) {
+        if (totalSpent >= 15_000_000) return 0.20f;
+        if (totalSpent >=  7_000_000) return 0.15f;
+        if (totalSpent >=  3_000_000) return 0.10f;
+        if (totalSpent >=    500_000) return 0.05f;
+        return 0f;
     }
 
     public InvoiceResponse CheckInvoiceAgain(String invoiceID) {
