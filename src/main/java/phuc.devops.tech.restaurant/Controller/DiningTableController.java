@@ -26,14 +26,14 @@ public class DiningTableController {
     }
 
     @PutMapping("/updateTable/{tableID}")
-    public String updateTable(@PathVariable Long id, @RequestBody UserCreateTable request) {
-        diningTableService.updateTable(id,request);
+    public String updateTable(@PathVariable Long tableID, @RequestBody UserCreateTable request) {
+        diningTableService.updateTable(tableID,request);
         return "This table has been updated";
     }
 
     @DeleteMapping("/deleteTable/{tableID}")
-    public String deleteTable(@PathVariable Long id) {
-        diningTableService.deleteTable(id);
+    public String deleteTable(@PathVariable Long tableID) {
+        diningTableService.deleteTable(tableID);
         return "This table has been deleted";
     }
 
