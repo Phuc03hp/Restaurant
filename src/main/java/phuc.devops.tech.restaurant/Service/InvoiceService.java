@@ -32,6 +32,11 @@ public class InvoiceService {
     @Autowired
     private OrderRepository orderRepository;
 
+    public Float getInvoiceTotal(String invoiceID){
+        Invoice invoice = invoiceRepository.findById(invoiceID).orElseThrow();
+        return invoice.getOrder().getTotal();
+    }
+
     public InvoiceResponse getInvoice(String orderID, UserCreateInvoice request) {
         Order order = orderRepository.findById(orderID)
                 .orElseThrow(() -> new RuntimeException("OrderID cannot be found"));

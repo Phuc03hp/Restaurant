@@ -13,5 +13,4 @@ public class PaymentCreate {
     private String invoiceId;
     private String bankCode;
     private String language;
-
 }
